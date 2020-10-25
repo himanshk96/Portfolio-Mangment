@@ -1,0 +1,60 @@
+ .tabs_below{
+    
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.sub1-container {
+    width: 555px;
+    height: 155px;
+    padding: 10px;
+  }
+
+  .news-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 15px;
+  }
+  .tab1-container {
+    display: flex;
+    /* border: 1px solid #c5c5c5;
+    background-color: #fafafa;
+    border-radius: 6px; */
+    height: 100%;
+  }
+  .img_big{
+      object-fit: cover;
+      height: 100px;
+      width:100px;
+  }
+  
+  .tab-left {
+    padding: 16px;
+  }  
+  .tab-right {
+    padding: 17px;
+    padding-left: 10px;
+    text-align: left;
+  }
+  .img-tab {
+    width: 112px;
+    height: 88px;
+    object-fit: cover;
+    border-radius: 3px;
+
+  } 
+
+  .positive {
+    color: green;
+}
+
+.negative {
+    color: red;
+}
+.caption_color_grey{
+    color:rgb(110, 117, 124);
+}
+.news_cards{
+    margin-left: 100px;
+    margin-bottom: 100px;
+}

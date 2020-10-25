@@ -1,0 +1,40 @@
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+<!-- * * * * * * * * * * * The content below * * * * * * * * * * * -->
+<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * -->
+<!-- * * * * * * * * * * and can be replaced. * * * * * * * * * * * -->
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+<!-- * * * * * * * * * Delete the template below * * * * * * * * * * -->
+<!-- * * * * * * * to get started with your project! * * * * * * * * -->
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+
+
+<header>
+  <nav class="navbar navbar-expand-lg nvcustom" style="background-color:rgb(111,0,255); color: white;">
+    <a class="navbar-brand" href="#">Stock Search</a>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <div class="navbar-nav ml-auto">
+        <a class="nav-item nav-link active" href="#">Search <span class="sr-only">(current)</span></a>
+        <a class="nav-item nav-link" href="#" routerLink="watchlist">Watchlist</a>
+        <a class="nav-item nav-link" href="#" routerLink="portfolio">Portfolio</a>
+
+      </div>
+    </div>
+  </nav>
+</header>
+<!-- <div>
+  <a [routerLink]="['/details', 'aapl']">
+    Details for aapl
+  </a>
+</div> -->
+
+<div class="main_content">
+  <div class="center_content">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <span class="text-muted">Powered by Tiingo.com and Developed by Himanshu Kriplani</span>
+  </div>
+</footer>
