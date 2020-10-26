@@ -1,71 +1,134 @@
 <br>
 <h1>My Portfolio</h1>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{this.cur_stock_symbol}}</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form>
+            <div class="form-group">
+                <label for="Price">Current Price: {{iex_data.last}}</label><br>
+                <label for="Quantity">Quantity: </label>
+                <input type="number" [value]="quantity"
+                    (keyup)="quantity=$event.target.value; total_price_buy=iex_data.last*quantity;" min="0">
+            </div>
+
+        </form>
+    </div>
+    <div class="modal-footer">
+        <span class="mr-auto">Total: {{total_price_buy | number : '1.2-2' }}</span>
+        <div *ngIf="(total_price_buy)>0 else disable_buy">
+            <button type="button" class="btn btn-success"
+                (click)="modal.close('Save click');addToPortfolioAndShowBuyMsg(iex_data.name)">Buy</button></div>
+
+    </div>
+</ng-template>
+<ng-template #sellModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{this.cur_stock_symbol}}</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form>
+            <div class="form-group">
+                <label for="Price">Current Price: {{iex_data.last}}</label><br>
+                <label for="Quantity">Quantity: </label>
+                <input type="number" [value]="quantity"
+                    (keyup)="quantity=$event.target.value; total_price_buy=iex_data.last*quantity;" min="0">
+            </div>
+
+        </form>
+    </div>
+    <div class="modal-footer">
+        <span class="mr-auto">Total: {{total_price_buy | number : '1.2-2' }}</span>
+        <div *ngIf="(quantity<=curr_quantity && quantity!=0) else disable_sell">
+            <button type="button" class="btn btn-success"
+                (click)="modal.close('Save click');removeFromPortfolio(iex_data.name)">Sell</button></div>
+
+    </div>
+
+</ng-template>
+<ng-template #disable_buy>
+    <button type="button" class="btn btn-success" (click)="modal.close('Save click')" disabled>Buy</button>
+</ng-template>
+<ng-template #disable_sell>
+    <button type="button" class="btn btn-success" (click)="modal.close('Save click')" disabled>Sell</button>
+</ng-template>
 <div *ngIf="loaded else loading">
 
+    <div *ngIf="getLenPortfolio()>0 else NoDataMsg">
+        <div *ngFor="let p of portfolio_data | keyvalue" class="card_padding">
+            <!-- {{i}} {{p.name}} -->
+            <div class="card w-100 h-50" (click)="callDetails(p.tickername)">
+                <div class="card-header">
+                    <span class="h4">{{p.key}} <span
+                            class="h5 caption_color_grey">{{port_data[p.key]["name"]}}</span></span>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <div class="d-flex justify-content-between">
+                                <div> Quantity:<br>
+                                    Avg. Cost/Share:<br>
+                                    Total Cost:<br>
+                                </div>
+                                <div class="text-right">
+                                    {{getQuantity(p.key)}}
+                                    <br>
+                                    {{getTotalPrice(p.key)/getQuantity(p.key)| number : '1.2-2'}}
+                                    <br>
+                                    {{getTotalPrice(p.key) | number : '1.2-2'}}
+                                </div>
+                            </div>
 
-    <div *ngFor="let p of portfolio_data | keyvalue" class="card_padding">
-        <!-- {{i}} {{p.name}} -->
-        <div class="card w-100 h-50" (click)="callDetails(p.tickername)">
-            <div class="card-header">
-                <h1>{{p.key}}</h1>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col">
-                        <div class="d-flex justify-content-between">
-                            <div> Quantity:<br>
-                                Avg. Cost/Share:<br>
-                                Total Cost:<br>
-                            </div>
-                            <div class="text-right">
-                                {{getQuantity(p.key)}}
-                                <br>
-                                {{getTotalPrice(p.key)/getQuantity(p.key)| number : '1.2-2'}}
-                                <br>
-                                {{getTotalPrice(p.key) | number : '1.2-2'}}
-                            </div>
                         </div>
-
-                    </div>
-                    <div class="col">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                Change:<br>
-                                Current Price:<br>
-                                Market Value:
-                            </div>
-                            <div class="text-right" [ngClass]="{
+                        <div class="col">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    Change:<br>
+                                    Current Price:<br>
+                                    Market Value:
+                                </div>
+                                <div class="text-right" [ngClass]="{
                                 'blac_' : (port_data[p.key]['last']-getTotalPrice(p.key)/getQuantity(p.key))   ==0 ,
                                 'positive' : (port_data[p.key]['last']-getTotalPrice(p.key)/getQuantity(p.key) ) > 0,
                                 'negative' : (port_data[p.key]['last']-getTotalPrice(p.key)/getQuantity(p.key)) < 0
                                 
                              }">
-                                <span
-                                    *ngIf="(port_data[p.key]['last']-getTotalPrice(p.key)/getQuantity(p.key) ) >0 else neg_img">
-                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-caret-up-fill"
-                                        fill="green" xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z" />
-                                    </svg></span>
-                                {{port_data[p.key]["last"]-getTotalPrice(p.key)/getQuantity(p.key) | number : '1.2-2'}}
-                                <br>
-                                {{port_data[p.key]["last"]}}
-                                <br>
-                                {{port_data[p.key]["last"] * getQuantity(p.key) | number : '1.2-2'}}
+                                    <span
+                                        *ngIf="(port_data[p.key]['last']-getTotalPrice(p.key)/getQuantity(p.key) ) >0 else neg_img">
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-caret-up-fill"
+                                            fill="green" xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z" />
+                                        </svg></span>
+                                    {{port_data[p.key]["last"]-getTotalPrice(p.key)/getQuantity(p.key) | number : '1.2-2'}}
+                                    <br>
+                                    {{port_data[p.key]["last"]}}
+                                    <br>
+                                    {{port_data[p.key]["last"] * getQuantity(p.key) | number : '1.2-2'}}
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="card-footer text-right">
+
+                    <button type="button" class="btn btn-primary" (click)="open(content,p.key)">Buy</button>&nbsp;
+                    <!-- <button type="button" class="btn btn-primary">Buy</button> &nbsp; -->
+                    <button type="button" class="btn btn-danger" (click)="open(sellModal,p.key)">Sell</button>
+
+                </div>
+
             </div>
-            <div class="card-footer text-right">
-
-                <button type="button" class="btn btn-primary">Buy</button> &nbsp;
-                <button type="button" class="btn btn-danger">Sell</button>
-
-            </div>
-
+            <br>
         </div>
-        <br>
     </div>
 </div>
 <ng-template #loading>
@@ -75,4 +138,9 @@
     <br>
 
     <mat-spinner style="margin:0 auto"></mat-spinner>
+</ng-template>
+<ng-template #NoDataMsg>
+    <div class="alert alert-warning text-center" role="alert">
+        Currently you don't have any stocks.
+    </div>
 </ng-template>

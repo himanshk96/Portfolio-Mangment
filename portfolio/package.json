@@ -25,6 +25,8 @@
     "@ng-bootstrap/ng-bootstrap": "^7.0.0",
     "angular-webstorage-service": "^1.0.2",
     "bootstrap": "^4.5.0",
+    "highcharts": "^8.2.2",
+    "highcharts-angular": "^2.8.0",
     "ngx-webstorage-service": "^4.1.0",
     "rxjs": "~6.5.5",
     "tslib": "^2.0.0",

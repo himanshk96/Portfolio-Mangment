@@ -4,6 +4,18 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 
 import { BackendNodeService } from '../backend-node.service';
 
+
+import * as Highcharts from "highcharts/highstock";
+import IndicatorsCore from "highcharts/indicators/indicators";
+IndicatorsCore(Highcharts);
+import vbp from 'highcharts/indicators/volume-by-price';
+import sma from 'highcharts/indicators/indicators';
+import ohlc from 'highcharts/indicators/indicators';
+
+ohlc(Highcharts);
+sma(Highcharts);
+vbp(Highcharts);
+
 @Component({
   selector: 'app-details',
   templateUrl: './details.component.html',
@@ -22,11 +34,17 @@ export class DetailsComponent implements OnInit {
   watchlist = []
   total_price_buy = 0;
   tempNews;
+  lastSaleDate;
   month = ["null", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   // iexLoaded: Promise<false>;
   closeResult = '';
 
+  Highcharts1: typeof Highcharts = Highcharts;
+  chartOptions1: Highcharts.Options;
 
+
+  Highcharts2: typeof Highcharts = Highcharts;
+  chartOptions2: Highcharts.Options;
   constructor(private route: ActivatedRoute, private _http: BackendNodeService, private modalService: NgbModal) { }
 
   ngOnInit(): void {
@@ -37,6 +55,8 @@ export class DetailsComponent implements OnInit {
     // this.stk_data = this._http.getDetail(this.stock_symbol);
     this._http.getIexData(this.stock_symbol).subscribe(res => {
       this.iex_data = res;
+      this.load_chart1();
+
     });
     this._http.getDailyData(this.stock_symbol).subscribe(res => {
       this.daily_data = res;
@@ -50,12 +70,165 @@ export class DetailsComponent implements OnInit {
       this.inWatchList = true;
 
     }
+    this.load_chart2()
 
     // localStorage.setItem('watchlist', JSON.stringify(this.watchlist));
+    // console.log(this.iex_data);
 
 
   }
+  load_chart2() {
+    var oneYearFromNow = new Date();
+    oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() - 2);
 
+    function convertDate(d) {
+      var parts = d.split(" ");
+      var months = { Jan: "01", Feb: "02", Mar: "03", Apr: "04", May: "05", Jun: "06", Jul: "07", Aug: "08", Sep: "09", Oct: "10", Nov: "11", Dec: "12" };
+      return parts[3] + "-" + months[parts[1]] + "-" + parts[2];
+    }
+    this._http.getVolumeCharts(this.stock_symbol, convertDate(oneYearFromNow.toString())).subscribe(res5 => {
+      const volume_chart = [];
+      const OHLC_chart = [];
+
+      res5.forEach(row => {
+        var RawDate = row.date.split("T");
+        var yearMonthDate = RawDate[0].split("-");
+        var hourMinSec = RawDate[1].split(":");
+        var UTCDate = Date.UTC(parseInt(yearMonthDate[0]), parseInt(yearMonthDate[1]) - 1, parseInt(yearMonthDate[2]), parseInt(hourMinSec[0]), parseInt(hourMinSec[1]), parseInt(hourMinSec[2].split(".")[0]))
+        const volume_row = [
+          UTCDate,
+          row.volume
+        ];
+        const OHLC_row = [
+          UTCDate,
+          row.open,
+          row.high,
+          row.low,
+          row.close
+        ];
+        volume_chart.push(volume_row);
+        OHLC_chart.push(OHLC_row);
+      });
+      this.chartOptions2 = {
+        title: {
+          text: this.stock_symbol.toUpperCase() + ' Historical'
+        },
+        subtitle: {
+          text: 'With SMA and Volume by Price technical indicators'
+        },
+        rangeSelector: {
+          inputEnabled: true,
+          selected: 2
+        },
+        tooltip: {
+          split: true
+        },
+        yAxis: [{
+          startOnTick: false,
+          endOnTick: false,
+          labels: {
+            align: 'right',
+            x: -3
+          },
+          title: {
+            text: 'OHLC'
+          },
+          height: '60%',
+          lineWidth: 2,
+          resize: {
+            enabled: true
+          }
+        }, {
+          labels: {
+            align: 'right',
+            x: -3
+          },
+          title: {
+            text: 'Volume'
+          },
+          top: '65%',
+          height: '35%',
+          offset: 0,
+          lineWidth: 2
+        }],
+        series: [{
+          type: 'candlestick',
+          name: this.stock_symbol.toUpperCase(),
+          id: 'ohlc',
+          zIndex: 2,
+          data: OHLC_chart
+        }, {
+          type: 'column',
+          name: 'Volume',
+          id: 'volume',
+          data: volume_chart,
+          yAxis: 1
+        }, {
+          type: 'vbp',
+          linkedTo: 'ohlc',
+          params: {
+            volumeSeriesID: 'volume'
+          },
+          dataLabels: {
+            enabled: false
+          },
+          zoneLines: {
+            enabled: false
+          }
+        }, {
+          type: 'sma',
+          linkedTo: 'ohlc',
+          zIndex: 1,
+          marker: {
+            enabled: false
+          }
+        }]
+      };
+    });
+  }
+  load_chart1() {
+    this.lastSaleDate = this.iex_data["lastSaleTimestamp"].split("T")[0];
+
+    this._http.getCharts(this.stock_symbol, this.lastSaleDate).subscribe(res4 => {
+      console.log("details", res4)
+      const summary_chart_data = [];
+      res4.forEach(row => {
+        var RawDate = row.date.split("T");
+        var yearMonthDate = RawDate[0].split("-");
+        var hourMinSec = RawDate[1].split(":");
+        var UTCDate = Date.UTC(parseInt(yearMonthDate[0]), parseInt(yearMonthDate[1]) - 1, parseInt(yearMonthDate[2]), parseInt(hourMinSec[0]), parseInt(hourMinSec[1]), parseInt(hourMinSec[2].split(".")[0]))
+        const summary_row = [
+          UTCDate,
+          row.close
+        ];
+        summary_chart_data.push(summary_row);
+      });
+      this.chartOptions1 = {
+        title: {
+          text: this.stock_symbol.toUpperCase() + ' Stock Price'
+        },
+        rangeSelector: {
+          enabled: false
+        },
+        plotOptions: {
+          series: {
+            color: '#FF0000'
+          }
+        },
+        xAxis: {
+          type: "datetime"
+        },
+        series: [{
+          name: this.stock_symbol.toUpperCase(),
+          tooltip: {
+            valueDecimals: 2
+          },
+          data: summary_chart_data,
+          type: 'line'
+        }],
+      };
+    });
+  }
   addToWishListFromDetails() {
 
     var watchlist = JSON.parse(localStorage.getItem("watchlist")) || [];
@@ -145,12 +318,12 @@ export class DetailsComponent implements OnInit {
     this.inWatchList = !this.inWatchList;
     var alertva;
     if (this.inWatchList) {
-      alertva = { "type": "success", "msg": "Added " + this.stock_symbol };
-      this.msgs.unshift({ "type": "success", "msg": "Added " + this.stock_symbol });
+      // alertva = { "type": "success", "msg": "Added " + this.stock_symbol };
+      this.msgs.unshift({ "type": "success", "msg": this.stock_symbol + " added to watchlist." });
     }
     if (!this.inWatchList) {
-      alertva = { "type": "success", "msg": "Added " + this.stock_symbol };
-      this.msgs.unshift({ "type": "danger", "msg": "removed " + this.stock_symbol });
+      // alertva = { "type": "success", "msg": "Added " + this.stock_symbol };
+      this.msgs.unshift({ "type": "danger", "msg": this.stock_symbol + " removed from watchlist." });
     }
     setTimeout(this.close.bind(this), 5000, alertva);
     this.watchlist = JSON.parse(localStorage.getItem("watchlist")) || [];

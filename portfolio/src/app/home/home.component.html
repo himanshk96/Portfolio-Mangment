@@ -6,7 +6,7 @@
             <input class="searchbox" type="text" [formControl]="control" [matAutocomplete]="auto" #stkinput
                 (ngModel)="stk_symbol" (ngModelChange)="modelChangeFn($event)"
                 (keyup)="getSearchOption(stkinput.value)">
-            <span class="input-group-text lime lighten-2" id="basic-text1">
+            <span id="basic-text1">
                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-search" fill="currentColor"
                     (click)="goToDetails()" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd"

@@ -20,6 +20,7 @@ export class WatchlistComponent implements OnInit {
   }
 
   async loadWLData() {
+    this.watchlist.sort()
     for (var i = 0; i < this.watchlist.length; i++) {
 
       let ticker_data = await this._http.getAsyncData(this.watchlist[i])

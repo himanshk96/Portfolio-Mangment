@@ -51,6 +51,12 @@ export class BackendNodeService {
     // this.http.get(this.backend_url + "/api/iex_data/" + stock_symbol).subscribe(res => this.iex_data = res)
     return this.http.get(this.backend_url + "/api/news_data/" + stock_symbol);
   }
+  getCharts(ticker, lastSaleDate): Observable<any> {
+    return this.http.get<any>(this.backend_url + `/charts/${ticker}/${lastSaleDate}`);
+  }
 
+  getVolumeCharts(ticker, pastTwoYearDate): Observable<any> {
+    return this.http.get<any>(this.backend_url + `/volumeCharts/${ticker}/${pastTwoYearDate}`);
+  }
 
 }

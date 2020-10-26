@@ -16,6 +16,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
+
+import { HighchartsChartModule } from 'highcharts-angular';
+
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 // import { StorageServiceModule } from 'angular-webstorage-service';
 
@@ -33,8 +36,8 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
     HttpClientModule,
     BrowserAnimationsModule,
     MatTabsModule,
-    MatAutocompleteModule, FormsModule, ReactiveFormsModule, NgbModule, MatProgressSpinnerModule
-
+    MatAutocompleteModule, FormsModule, ReactiveFormsModule, NgbModule, MatProgressSpinnerModule,
+    HighchartsChartModule
   ],
 
   providers: [],
