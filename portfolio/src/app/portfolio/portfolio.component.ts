@@ -118,7 +118,7 @@ export class PortfolioComponent implements OnInit {
     if (portfoloio_data[this.cur_stock_symbol]["quantity"] == 0) {
       delete portfoloio_data[this.cur_stock_symbol];
     }
-
+    this.portfolio_data = portfoloio_data;
     localStorage.setItem('portfolio_data', JSON.stringify(portfoloio_data));
     // var alertva = { "type": "success", "msg": this.cur_stock_symbol + " bought successfully!" }
     // this.msgs.unshift(alertva);

@@ -42,7 +42,6 @@
                 <label for="Price">Current Price: {{iex_data.last}}</label><br>
                 <label for="Quantity">Quantity: </label>
                 <input type="number" [value]="quantity"
-                    (change)="quantity=$event.target.value; total_price_buy=iex_data.last*quantity;"
                     (keyup)="quantity=$event.target.value; total_price_buy=iex_data.last*quantity;" min="0">
             </div>
 
