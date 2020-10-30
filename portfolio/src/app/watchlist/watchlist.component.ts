@@ -11,6 +11,7 @@ export class WatchlistComponent implements OnInit {
   watchlist = [];
   WLCardsData = [];
   loaded = false;
+  iex_data_arr;
   constructor(private _http: BackendNodeService, private router: Router) { }
 
   ngOnInit(): void {
@@ -21,6 +22,22 @@ export class WatchlistComponent implements OnInit {
 
   async loadWLData() {
     this.watchlist.sort()
+
+
+
+    // var stocks = this.watchlist.join(",");
+    // console.log("loaddata", this.watchlist.join(","))
+
+    // this._http.getIexDataMulti(stocks).subscribe(res => {
+    //   this.iex_data_arr = res;
+    //   for (var i = 0; i < this.watchlist.length; i++) {
+    //     this.WLCardsData.push({ 'name': 'a', 'tickername': this.watchlist[i], 'price': this.iex_data_arr[i]['last'], 'change': parseFloat((this.iex_data_arr[i]['last'] - this.iex_data_arr['prevClose']).toFixed(2)), changepercent: parseFloat(((this.iex_data_arr[i]['last'] - this.iex_data_arr['prevClose']) * 100 / this.iex_data_arr['prevClose']).toFixed(2)) })
+    //   }
+
+    // });
+
+
+
     for (var i = 0; i < this.watchlist.length; i++) {
 
       let ticker_data = await this._http.getAsyncData(this.watchlist[i])

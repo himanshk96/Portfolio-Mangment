@@ -72,6 +72,20 @@ app.get('/api/iex_data/:stock_symbol', (req, res) => {
         }
     );
 });
+app.get('/api/iex_data/multi/:stock_symbol', (req, res) => {
+    stock_symbol = req.params.stock_symbol;
+    var requestOptions = {
+        'url': 'https://api.tiingo.com/iex/?tickers=' + stock_symbol + '&token=cee2b7e0a2d004c7fddf4cfe3907a74fd0d27f67',
+        'headers': {
+            'Content-Type': 'application/json'
+        }
+    };
+    request(requestOptions,
+        function (error, response, body) {
+            res.send(JSON.parse(body)[0]);
+        }
+    );
+});
 
 app.get('/api/daily_data/:stock_symbol', (req, res) => {
     stock_symbol = req.params.stock_symbol;

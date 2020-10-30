@@ -14,9 +14,7 @@ export class BackendNodeService {
   constructor(private http: HttpClient) { }
   async getAsyncData(name: string) {
     var arr = []
-    // console.log(name);
     await this.getIexData(name).toPromise().then(data => {
-      // console.log(data)
       arr.push(data["last"]);
       arr.push(data["prevClose"]);
     })
@@ -37,6 +35,11 @@ export class BackendNodeService {
     return this.http.get(this.backend_url + "/api/detail/" + stock_symbol);
   }
   getIexData(stock_symbol) {
+    // console.log('here I come to the rescue');
+    // this.http.get(this.backend_url + "/api/iex_data/" + stock_symbol).subscribe(res => this.iex_data = res)
+    return this.http.get(this.backend_url + "/api/iex_data/" + stock_symbol);
+  }
+  getIexDataMulti(stock_symbol) {
     // console.log('here I come to the rescue');
     // this.http.get(this.backend_url + "/api/iex_data/" + stock_symbol).subscribe(res => this.iex_data = res)
     return this.http.get(this.backend_url + "/api/iex_data/" + stock_symbol);

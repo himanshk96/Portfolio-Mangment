@@ -44,6 +44,7 @@ html {
     position: relative;
     display: flex;  
     justify-content: center;
+    min-height: 93vh;
     
   }
   @media screen and (max-width: 600px) {

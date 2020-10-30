@@ -38,7 +38,7 @@ export class DetailsComponent implements OnInit {
   month = ["null", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   // iexLoaded: Promise<false>;
   closeResult = '';
-
+  notFound = false;
   Highcharts1: typeof Highcharts = Highcharts;
   chartOptions1: Highcharts.Options;
 
@@ -60,6 +60,9 @@ export class DetailsComponent implements OnInit {
     });
     this._http.getDailyData(this.stock_symbol).subscribe(res => {
       this.daily_data = res;
+      if (this.daily_data["detail"] == "Not found.") {
+        this.notFound = true;
+      }
     });
     this._http.getNews(this.stock_symbol).subscribe(res => {
       this.newsData = res['articles'];
@@ -285,14 +288,14 @@ export class DetailsComponent implements OnInit {
     this.tempNews["publishedAtModified"] = this.month[parseInt(dateStringArray[1])].toString() + " " + dateStringArray[2] + ", " + dateStringArray[0];
     this.tempNews["twitterContent"] = this.tempNews["title"].replace(/ /g, "%20") + " " + this.tempNews["url"];
 
-    this.quantity = 0;
+    // this.quantity = 0;
 
-    this._http.getIexData(this.stock_symbol).subscribe(res => {
-      this.iex_data = res;
-    });
-    this._http.getDailyData(this.stock_symbol).subscribe(res => {
-      this.daily_data = res;
-    });
+    // this._http.getIexData(this.stock_symbol).subscribe(res => {
+    //   this.iex_data = res;
+    // });
+    // this._http.getDailyData(this.stock_symbol).subscribe(res => {
+    //   this.daily_data = res;
+    // });
 
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
