@@ -200,7 +200,7 @@
                 </mat-tab>
                 <mat-tab label="Charts" class="h-100 w-100">
                     <!-- Content 3 -->
-                    <div class="container">
+                    <div class="container" *ngIf="chartOptions2">
                         <highcharts-chart [Highcharts]="Highcharts2" [constructorType]="'stockChart'"
                             [options]="chartOptions2" style="width: 100%; height: 800px; display: block;">
                         </highcharts-chart>
