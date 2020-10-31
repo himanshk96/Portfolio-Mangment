@@ -3,7 +3,7 @@ var request = require('request');
 const app = express()
 var cors = require('cors')
 
-const port = 3000
+const port = process.env.PORT || 3000
 app.use(cors())
 app.get('/', (req, res) => {
     res.send('CSCI 571 | HW8 | Himanshu Kriplani')

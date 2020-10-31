@@ -5,8 +5,9 @@
     </div>
 </ng-template>
 <br>
+<br>
 <h1>My Watchlist</h1>
-
+<br>
 <div *ngIf="loaded else loading">
     <div *ngIf="WLCardsData.length>0  else NoDataMsg">
         <div *ngFor="let p of WLCardsData; let i = index" class="card_padding">
