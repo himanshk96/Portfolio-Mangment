@@ -28,7 +28,7 @@ export class WatchlistComponent implements OnInit {
 
 
     var stocks = this.watchlist.join(",");
-    console.log("loaddata", this.watchlist.join(","))
+    // console.log("loaddata", this.watchlist.join(","))
 
     this._http.getIexDataMulti(stocks).subscribe(res => {
       this.iex_data_arr = res;
@@ -36,19 +36,19 @@ export class WatchlistComponent implements OnInit {
       for (var i = 0; i < this.iex_data_arr.length; i++) {
         temp_json[this.iex_data_arr[i]['ticker']] = this.iex_data_arr[i]
       }
-      console.log('temp', temp_json)
+      // console.log('temp', temp_json)
       //sort by id
       // let keys = Object.keys(this.purchasedlist).sort();
       //   for(let i=0;i<keys.length;i++){
       //     this.purchasedSorted.push(this.purchasedlist[keys[i]]);
       //   }
-      console.log('iexarr', this.iex_data_arr);
+      // console.log('iexarr', this.iex_data_arr);
 
       for (var i = 0; i < this.watchlist.length; i++) {
         var tick = this.watchlist[i]
         this.WLCardsData.push({ 'name': this.ticker_mapping[tick], 'tickername': tick, 'price': temp_json[tick]['last'], 'change': parseFloat((temp_json[tick]['last'] - temp_json[tick]['prevClose']).toFixed(2)), changepercent: parseFloat(((temp_json[tick]['last'] - temp_json[tick]['prevClose']) * 100 / temp_json[tick]['prevClose']).toFixed(2)) })
       }
-      console.log('wlD', this.WLCardsData)
+      // console.log('wlD', this.WLCardsData)
     });
 
 
@@ -60,7 +60,10 @@ export class WatchlistComponent implements OnInit {
     //   this.WLCardsData.push({ 'name': ticker_data[2], 'tickername': this.watchlist[i], 'price': ticker_data[0], 'change': parseFloat((ticker_data[0] - ticker_data[1]).toFixed(2)), changepercent: parseFloat(((ticker_data[0] - ticker_data[1]) * 100 / ticker_data[1]).toFixed(2)) });
 
     // };
-    this.loaded = true;
+    setInterval(() => {
+      this.loaded = true
+    }, 200)
+    // this.loaded = true;
 
   }
   closeWatchlist(m) {

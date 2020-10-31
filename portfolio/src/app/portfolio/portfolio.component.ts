@@ -52,7 +52,10 @@ export class PortfolioComponent implements OnInit {
 
       };
     });
-    this.loaded = true;
+    setInterval(() => {
+      this.loaded = true
+    }, 200)
+    // this.loaded = true;
     // console.log("this", this.port_data)
   }
   float2int(value) {
