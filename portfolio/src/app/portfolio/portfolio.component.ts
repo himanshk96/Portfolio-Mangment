@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BackendNodeService } from '../backend-node.service';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-portfolio',
@@ -19,7 +20,7 @@ export class PortfolioComponent implements OnInit {
   curr_quantity;
   ticker_mapping;
   iex_data_arr;
-  constructor(private _http: BackendNodeService, private modalService: NgbModal) {
+  constructor(private _http: BackendNodeService, private modalService: NgbModal, private router: Router) {
 
   }
   port_data = {};
@@ -116,6 +117,7 @@ export class PortfolioComponent implements OnInit {
     // var alertva = { "type": "success", "msg": this.cur_stock_symbol + " bought successfully!" }
     // this.msgs.unshift(alertva);
     // setTimeout(this.close.bind(this), 5000, alertva);
+    this.loadIEXData()
   }
   removeFromPortfolio() {
     // var quant = parseInt(this.quantity)
@@ -136,9 +138,13 @@ export class PortfolioComponent implements OnInit {
     // var alertva = { "type": "success", "msg": this.cur_stock_symbol + " bought successfully!" }
     // this.msgs.unshift(alertva);
     // setTimeout(this.close.bind(this), 5000, alertva);
-
+    this.loadIEXData();
   }
   getLenPortfolio() {
     return Object.keys(this.portfolio_data).length
+  }
+  callDetails(ticker) {
+    this.router.navigate(['/details', ticker])
+
   }
 }

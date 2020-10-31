@@ -4,8 +4,7 @@
     <div>
         <form>
             <input class="searchbox" type="text" [formControl]="control" [matAutocomplete]="auto" #stkinput
-                (ngModel)="stk_symbol" (ngModelChange)="modelChangeFn($event)"
-                (keyup)="getSearchOption(stkinput.value)">
+                (ngModel)="stk_symbol" (ngModelChange)="modelChangeFn($event)">
             <span id="basic-text1">
                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-search" fill="currentColor"
                     (click)="goToDetails()" xmlns="http://www.w3.org/2000/svg">
@@ -18,6 +17,9 @@
             <mat-autocomplete #auto="matAutocomplete">
                 <mat-option *ngFor="let op of search_options | async" [value]="op.ticker">
                     {{op.ticker}}|{{op.name}}
+                </mat-option>
+                <mat-option *ngIf="!Ready">
+                    <mat-spinner [diameter]=40 style="margin: 0 auto;"></mat-spinner>
                 </mat-option>
             </mat-autocomplete>
 

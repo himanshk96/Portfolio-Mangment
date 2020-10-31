@@ -12,16 +12,7 @@ export class BackendNodeService {
   backend_url = "http://localhost:3000";
   iex_data;
   constructor(private http: HttpClient) { }
-  async getAsyncData(name: string) {
-    var arr = []
-    await this.getIexData(name).toPromise().then(data => {
-      arr.push(data["last"]);
-      arr.push(data["prevClose"]);
-    })
-    await this.getDailyData(name).toPromise().then(data => arr.push(data["name"]))
 
-    return arr
-  }
   getSearch(stock_symbol) {
     // console.log('here I come to the rescue');
     //var suggestions = this.http.get(this.backend_url + "/api/search/" + stock_symbol).subscribe(res => [res["name"], res["ticker"]]);

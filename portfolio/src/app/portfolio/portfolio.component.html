@@ -69,7 +69,7 @@
         <div *ngFor="let p of portfolio_data | keyvalue" class="card_padding">
             <!-- {{i}} {{p.name}} -->
             <div class="card w-100 h-50">
-                <div class="card-header">
+                <div class="card-header" (click)=callDetails(p.key)>
                     <span class="h4">{{p.key}} <span
                             class="h5 caption_color_grey">{{port_data[p.key]["name"]}}</span></span>
                 </div>

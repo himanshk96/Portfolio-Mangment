@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
-
+import { Subscription, timer } from 'rxjs';
+import { switchMap, timeout } from 'rxjs/operators';
 import { BackendNodeService } from '../backend-node.service';
 
 
@@ -36,7 +37,7 @@ export class DetailsComponent implements OnInit {
   tempNews;
   lastSaleDate;
   chart_chng = 'black';
-
+  subscription: Subscription;
   month = ["null", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   // iexLoaded: Promise<false>;
   closeResult = '';
@@ -48,8 +49,13 @@ export class DetailsComponent implements OnInit {
   Highcharts2: typeof Highcharts = Highcharts;
   chartOptions2: Highcharts.Options;
   constructor(private route: ActivatedRoute, private _http: BackendNodeService, private modalService: NgbModal) { }
-
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
   ngOnInit(): void {
+
+
+    // this.subscription=timer(0,15000).pipe(switchMap(()=>this._http.getDailyPrice(this.tickername))).
 
     this.sub = this.route.params.subscribe(params => {
       this.stock_symbol = params['stocksymbol'].toUpperCase();;
@@ -263,7 +269,7 @@ export class DetailsComponent implements OnInit {
     this.msgs.unshift(alertva);
     setTimeout(this.close.bind(this), 5000, alertva);
     this.saveToMapping(this.stock_symbol, this.daily_data["name"])
-
+    this.ngOnInit()
   }
   saveToMapping(ticker, name) {
     var ticker_mapping = JSON.parse(localStorage.getItem("ticker_mapping")) || {};

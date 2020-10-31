@@ -14,6 +14,7 @@ export class HomeComponent implements OnInit {
   search_options: object;
   control = new FormControl();
   stk_symbol;
+  Ready = true;
   constructor(private _http: BackendNodeService, private router: Router) { }
 
   ngOnInit(): void {
@@ -32,6 +33,11 @@ export class HomeComponent implements OnInit {
   }
   modelChangeFn(value) {
     this.stk_symbol = value;
+    this.Ready = false;
+    console.log('before', this.Ready)
+    this.getSearchOption(value)
+    this.Ready = true;
+    console.log('after', this.Ready)
   }
   goToDetails() {
     console.log(this.stk_symbol);
