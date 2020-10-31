@@ -17,13 +17,15 @@ export class PortfolioComponent implements OnInit {
   total_price_buy;
   cur_stock_symbol;
   curr_quantity;
-
+  ticker_mapping;
+  iex_data_arr;
   constructor(private _http: BackendNodeService, private modalService: NgbModal) {
 
   }
   port_data = {};
   ngOnInit(): void {
     this.portfolio_data = JSON.parse(localStorage.getItem("portfolio_data")) || {};
+    this.ticker_mapping = JSON.parse(localStorage.getItem("ticker_mapping")) || {};
     // console.log("loading live data")
     this.loadIEXData()
     // console.log("loaded live data")
@@ -31,13 +33,24 @@ export class PortfolioComponent implements OnInit {
   async loadIEXData() {
     var stock_list = Object.keys(this.portfolio_data);
     stock_list.sort();
-    for (var i = 0; i < stock_list.length; i++) {
-      var sym = stock_list[i]
-      let ticker_data = await this._http.getAsyncData(sym)
-      this.port_data[sym] = { 'last': ticker_data[0], 'name': ticker_data[2] }
-      // this.port_data.push({ 'name': ticker_data[2], 'tickername': sym, 'price': ticker_data[0], 'change': parseFloat((ticker_data[0] - ticker_data[1]).toFixed(2)), changepercent: parseFloat(((ticker_data[0] - ticker_data[1]) * 100 / ticker_data[1]).toFixed(2)) });
+    var stocks = stock_list.join(",");
+    // console.log("loaddata", stock_list.join(","))
 
-    };
+    this._http.getIexDataMulti(stocks).subscribe(res => {
+      this.iex_data_arr = res;
+      var temp_json = {}
+      for (var i = 0; i < this.iex_data_arr.length; i++) {
+        temp_json[this.iex_data_arr[i]['ticker']] = this.iex_data_arr[i]
+      }
+      // console.log('port_temp', temp_json)
+      for (var i = 0; i < stock_list.length; i++) {
+        var sym = stock_list[i]
+        let ticker_data = temp_json[sym]//await this._http.getAsyncData(sym)
+        this.port_data[sym] = { 'last': ticker_data['last'], 'name': this.ticker_mapping[sym] }
+        // this.port_data.push({ 'name': ticker_data[2], 'tickername': sym, 'price': ticker_data[0], 'change': parseFloat((ticker_data[0] - ticker_data[1]).toFixed(2)), changepercent: parseFloat(((ticker_data[0] - ticker_data[1]) * 100 / ticker_data[1]).toFixed(2)) });
+
+      };
+    });
     this.loaded = true;
     // console.log("this", this.port_data)
   }
