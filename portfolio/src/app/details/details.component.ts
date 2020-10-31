@@ -262,6 +262,16 @@ export class DetailsComponent implements OnInit {
     var alertva = { "type": "success", "msg": this.stock_symbol + " bought successfully!" }
     this.msgs.unshift(alertva);
     setTimeout(this.close.bind(this), 5000, alertva);
+    this.saveToMapping(this.stock_symbol, this.daily_data["name"])
+
+  }
+  saveToMapping(ticker, name) {
+    var ticker_mapping = JSON.parse(localStorage.getItem("ticker_mapping")) || {};
+    if (!ticker_mapping[ticker]) {
+      ticker_mapping[ticker] = name
+    }
+    localStorage.setItem('ticker_mapping', JSON.stringify(ticker_mapping));
+
   }
 
   open(content) {
@@ -346,6 +356,7 @@ export class DetailsComponent implements OnInit {
       // console.log("adding", this.stock_symbol)
       // var watchlist = JSON.parse(localStorage.getItem("watchlist")) || [];
       this.watchlist.push(this.stock_symbol);
+      this.saveToMapping(this.stock_symbol, this.daily_data["name"])
       localStorage.setItem('watchlist', JSON.stringify(this.watchlist));
     }
 

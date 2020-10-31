@@ -42,7 +42,7 @@ export class BackendNodeService {
   getIexDataMulti(stock_symbol) {
     // console.log('here I come to the rescue');
     // this.http.get(this.backend_url + "/api/iex_data/" + stock_symbol).subscribe(res => this.iex_data = res)
-    return this.http.get(this.backend_url + "/api/iex_data/" + stock_symbol);
+    return this.http.get(this.backend_url + "/api/iex_data/multi/" + stock_symbol);
   }
   getDailyData(stock_symbol) {
     // console.log('here I come to the rescue');
