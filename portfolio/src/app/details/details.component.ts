@@ -35,6 +35,8 @@ export class DetailsComponent implements OnInit {
   total_price_buy = 0;
   tempNews;
   lastSaleDate;
+  chart_chng = 'black';
+
   month = ["null", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   // iexLoaded: Promise<false>;
   closeResult = '';
@@ -55,7 +57,9 @@ export class DetailsComponent implements OnInit {
     // this.stk_data = this._http.getDetail(this.stock_symbol);
     this._http.getIexData(this.stock_symbol).subscribe(res => {
       this.iex_data = res;
+      this.chart_chng = (this.iex_data["last"] - this.iex_data["prevClose"]) > 0 ? "green" : "red"
       this.load_chart1();
+
 
     });
     this._http.getDailyData(this.stock_symbol).subscribe(res => {
@@ -215,7 +219,7 @@ export class DetailsComponent implements OnInit {
         },
         plotOptions: {
           series: {
-            color: '#FF0000'
+            color: this.chart_chng
           }
         },
         xAxis: {

@@ -97,20 +97,24 @@
             </div>
             <div class="text-right">
                 <h1 *ngIf="iex_data" [ngClass]="{
+                    'blac_' :(iex_data.last-iex_data.prevClose) == 0, 
             'positive' : (iex_data.last-iex_data.prevClose) > 0,
             'negative' : (iex_data.last-iex_data.prevClose) < 0
          }">{{iex_data.last}}</h1>
 
                 <h3 *ngIf="iex_data" [ngClass]="{
+                    'blac_' :(iex_data.last-iex_data.prevClose) == 0,
             'positive' : (iex_data.last-iex_data.prevClose) > 0,
             'negative' : (iex_data.last-iex_data.prevClose) < 0
          }">
-                    <span *ngIf="(iex_data.last-iex_data.prevClose)>0 else neg_img"> <svg width="1em" height="1em"
-                            viewBox="0 0 16 16" class="bi bi-caret-up-fill" fill="green"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z" />
-                        </svg></span>
+                    <span *ngIf="(iex_data.last-iex_data.prevClose)>=0 else neg_img"><span
+                            *ngIf="(iex_data.last-iex_data.prevClose)>0"> <svg width="1em" height="1em"
+                                viewBox="0 0 16 16" class="bi bi-caret-up-fill" fill="green"
+                                xmlns="http://www.w3.org/2000/svg">
+
+                                <path
+                                    d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z" />
+                            </svg></span></span>
                     {{(iex_data.last-iex_data.prevClose)  | number : '1.2-2'}}
 
                     ({{((iex_data.last-iex_data.prevClose)*100/iex_data.prevClose)  | number : '1.2-2'}}%)</h3>

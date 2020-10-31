@@ -82,7 +82,7 @@ app.get('/api/iex_data/multi/:stock_symbol', (req, res) => {
     };
     request(requestOptions,
         function (error, response, body) {
-            res.send(JSON.parse(body)[0]);
+            res.send(JSON.parse(body));
         }
     );
 });
