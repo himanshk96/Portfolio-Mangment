@@ -37,7 +37,7 @@ export class DetailsComponent implements OnInit {
   tempNews;
   lastSaleDate;
   chart_chng = 'black';
-  subscription: Subscription;
+  subscription;
   month = ["null", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   // iexLoaded: Promise<false>;
   closeResult = '';
@@ -54,17 +54,16 @@ export class DetailsComponent implements OnInit {
   }
   ngOnInit(): void {
 
-
-    // this.subscription=timer(0,15000).pipe(switchMap(()=>this._http.getDailyPrice(this.tickername))).
-
     this.sub = this.route.params.subscribe(params => {
       this.stock_symbol = params['stocksymbol'].toUpperCase();;
     });
     // this.stk_data = this._http.getDetail(this.stock_symbol);
-    this._http.getIexData(this.stock_symbol).subscribe(res => {
+    this.subscription = timer(0, 15000).pipe(switchMap(() => this._http.getIexData(this.stock_symbol))).subscribe(res => {
+      // this._http.getIexData(this.stock_symbol).subscribe(res => {
       this.iex_data = res;
       this.chart_chng = (this.iex_data["last"] - this.iex_data["prevClose"]) > 0 ? "green" : "red"
       this.load_chart1();
+      console.log(Date.now())
 
 
     });
@@ -203,7 +202,7 @@ export class DetailsComponent implements OnInit {
     this.lastSaleDate = this.iex_data["lastSaleTimestamp"].split("T")[0];
 
     this._http.getCharts(this.stock_symbol, this.lastSaleDate).subscribe(res4 => {
-      console.log("details", res4)
+      // console.log("details", res4)
       const summary_chart_data = [];
       res4.forEach(row => {
         var RawDate = row.date.split("T");
@@ -269,7 +268,7 @@ export class DetailsComponent implements OnInit {
     this.msgs.unshift(alertva);
     setTimeout(this.close.bind(this), 5000, alertva);
     this.saveToMapping(this.stock_symbol, this.daily_data["name"])
-    this.ngOnInit()
+    // this.ngOnInit()
   }
   saveToMapping(ticker, name) {
     var ticker_mapping = JSON.parse(localStorage.getItem("ticker_mapping")) || {};
@@ -356,7 +355,7 @@ export class DetailsComponent implements OnInit {
       // console.log("removing", this.stock_symbol)
       // var watchlist = JSON.parse(localStorage.getItem("watchlist")) || [];
       this.watchlist = this.watchlist.filter(word => word != this.stock_symbol);
-      console.log("this in update", this.watchlist);
+      // console.log("this in update", this.watchlist);
       localStorage.setItem('watchlist', JSON.stringify(this.watchlist));
     } else {
       // console.log("adding", this.stock_symbol)
