@@ -51,12 +51,36 @@ export class PortfolioComponent implements OnInit {
         // this.port_data.push({ 'name': ticker_data[2], 'tickername': sym, 'price': ticker_data[0], 'change': parseFloat((ticker_data[0] - ticker_data[1]).toFixed(2)), changepercent: parseFloat(((ticker_data[0] - ticker_data[1]) * 100 / ticker_data[1]).toFixed(2)) });
 
       };
+      this.loaded = true;
     });
-    setInterval(() => {
-      this.loaded = true
-    }, 200)
+    // setInterval(() => {
+    //   this.loaded = true
+    // }, 200)
     // this.loaded = true;
     // console.log("this", this.port_data)
+  }
+  refreshData() {
+
+    var stock_list = Object.keys(this.portfolio_data);
+    stock_list.sort();
+    var stocks = stock_list.join(",");
+    // console.log("loaddata", stock_list.join(","))
+
+    this._http.getIexDataMulti(stocks).subscribe(res => {
+      this.iex_data_arr = res;
+      var temp_json = {}
+      for (var i = 0; i < this.iex_data_arr.length; i++) {
+        temp_json[this.iex_data_arr[i]['ticker']] = this.iex_data_arr[i]
+      }
+      // console.log('port_temp', temp_json)
+      for (var i = 0; i < stock_list.length; i++) {
+        var sym = stock_list[i]
+        let ticker_data = temp_json[sym]//await this._http.getAsyncData(sym)
+        this.port_data[sym] = { 'last': ticker_data['last'], 'name': this.ticker_mapping[sym] }
+        // this.port_data.push({ 'name': ticker_data[2], 'tickername': sym, 'price': ticker_data[0], 'change': parseFloat((ticker_data[0] - ticker_data[1]).toFixed(2)), changepercent: parseFloat(((ticker_data[0] - ticker_data[1]) * 100 / ticker_data[1]).toFixed(2)) });
+
+      };
+    });
   }
   float2int(value) {
     // console.log("float_int", value | 0)
@@ -120,7 +144,7 @@ export class PortfolioComponent implements OnInit {
     // var alertva = { "type": "success", "msg": this.cur_stock_symbol + " bought successfully!" }
     // this.msgs.unshift(alertva);
     // setTimeout(this.close.bind(this), 5000, alertva);
-    this.loadIEXData()
+    this.refreshData()
   }
   removeFromPortfolio() {
     // var quant = parseInt(this.quantity)
@@ -141,7 +165,7 @@ export class PortfolioComponent implements OnInit {
     // var alertva = { "type": "success", "msg": this.cur_stock_symbol + " bought successfully!" }
     // this.msgs.unshift(alertva);
     // setTimeout(this.close.bind(this), 5000, alertva);
-    this.loadIEXData();
+    this.refreshData()
   }
   getLenPortfolio() {
     return Object.keys(this.portfolio_data).length
