@@ -28,6 +28,7 @@ export class PortfolioComponent implements OnInit {
     this.portfolio_data = JSON.parse(localStorage.getItem("portfolio_data")) || {};
     this.ticker_mapping = JSON.parse(localStorage.getItem("ticker_mapping")) || {};
     // console.log("loading live data")
+
     this.loadIEXData()
     // console.log("loaded live data")
   }
@@ -36,7 +37,11 @@ export class PortfolioComponent implements OnInit {
     stock_list.sort();
     var stocks = stock_list.join(",");
     // console.log("loaddata", stock_list.join(","))
-
+    console.log(this.portfolio_data == null, this.portfolio_data == {}, this.portfolio_data)
+    if (Object.keys(this.portfolio_data).length == 0) {
+      this.loaded = true
+      return
+    }
     this._http.getIexDataMulti(stocks).subscribe(res => {
       this.iex_data_arr = res;
       var temp_json = {}

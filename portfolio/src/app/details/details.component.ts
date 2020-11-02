@@ -61,8 +61,11 @@ export class DetailsComponent implements OnInit {
     // this.stk_data = this._http.getDetail(this.stock_symbol);
     this.subscription = timer(0, 15000).pipe(switchMap(() => this._http.getIexData(this.stock_symbol))).subscribe(res => {
       // this._http.getIexData(this.stock_symbol).subscribe(res => {
+
       this.iex_data = res;
+
       this.chart_chng = (this.iex_data["last"] - this.iex_data["prevClose"]) > 0 ? "green" : "red"
+      // this.subscription=timer(0,15000).pipe(switchMap(()=> this._http.))
       this.load_chart1();
       // console.log(Date.now())
       this.marketDate()
@@ -217,7 +220,7 @@ export class DetailsComponent implements OnInit {
       };
     });
   }
-  load_chart1() {
+  async load_chart1() {
     this.lastSaleDate = this.iex_data["lastSaleTimestamp"].split("T")[0];
 
     this._http.getCharts(this.stock_symbol, this.lastSaleDate).subscribe(res4 => {
@@ -245,7 +248,7 @@ export class DetailsComponent implements OnInit {
           series: {
             color: this.chart_chng
           }
-        },
+        }, time: { useUTC: false },
         xAxis: {
           type: "datetime"
         },
@@ -284,9 +287,14 @@ export class DetailsComponent implements OnInit {
     }
     localStorage.setItem('portfolio_data', JSON.stringify(portfoloio_data));
     var alertva = { "type": "success", "msg": this.stock_symbol + " bought successfully!" }
-
-    this.msgs.unshift(alertva);
-    setTimeout(this.close.bind(this), 5000, alertva);
+    console.log(this.msgs)
+    if (this.msgs.includes({ "type": "success", "msg": this.stock_symbol + " bought successfully!" })) {
+      var himanshu = "kriplani"
+    }
+    else {
+      this.msgs.unshift(alertva);
+      setTimeout(this.close.bind(this), 5000, alertva);
+    }
     this.saveToMapping(this.stock_symbol, this.daily_data["name"])
     // this.ngOnInit()
   }

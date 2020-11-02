@@ -52,7 +52,7 @@
     <div class="modal-footer">
         <span class="mr-auto">Total: {{total_price_buy | number : '1.2-2' }}</span>
         <div
-            *ngIf="(quantity<=curr_quantity && quantity!=0) && iex_data.askPrice && iex_data.mid && iex_data.askSize else disable_sell">
+            *ngIf="(quantity<=curr_quantity && quantity>0) && (iex_data.askPrice!=null && iex_data.bidPrice!=null && iex_data.askSize!=null && iex_data.bidSize!=null) else disable_sell">
             <button type="button" class="btn btn-success"
                 (click)="modal.close('Save click');removeFromPortfolio(iex_data.name)">Sell</button></div>
 

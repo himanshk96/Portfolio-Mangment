@@ -18,7 +18,8 @@
                     <label for="Price">Current Price: {{iex_data.last}}</label><br>
                     <label for="Quantity">Quantity: </label>
                     <input type="number" [value]="quantity"
-                        (keyup)="quantity=$event.target.value; total_price_buy=iex_data.last*quantity;" min="0">
+                        (keyup)="quantity=$event.target.value; total_price_buy=iex_data.last*quantity;"
+                        (change)="quantity=$event.target.value; total_price_buy=iex_data.last*quantity;" min="0">
                 </div>
 
             </form>
@@ -123,7 +124,8 @@
             </div>
         </div>
         <div *ngIf="iex_data else market_close_temp" class="text-center ">
-            <div *ngIf="iex_data.askPrice && iex_data.mid && iex_data.askSize else market_close_temp">
+            <div
+                *ngIf="(iex_data.askPrice!=null && iex_data.bidPrice!=null && iex_data.askSize!=null && iex_data.bidSize!=null) else market_close_temp">
                 <span style="background-color:rgb(220,240,220);">Market is open</span>
             </div>
         </div>
@@ -138,10 +140,10 @@
         <div>
             <mat-tab-group mat-align-tabs="center" mat-stretch-tabs>
 
-                <mat-tab label="Summary">
+                <mat-tab label="Summary" style="overflow: hidden;">
                     <div class="container" class="tabs_below">
                         <div *ngIf="iex_data">
-                            <div class="row">
+                            <div class="row" style="width: 100%;">
                                 <div class="col-sm">
 
                                     <div class="row">

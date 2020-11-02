@@ -43,12 +43,15 @@ export class WatchlistComponent implements OnInit {
     this._http.getIexDataMulti(stocks).subscribe(res => {
       this.iex_data_arr = res;
       var temp_json = {}
+      console.log(this.iex_data_arr)
       for (var i = 0; i < this.iex_data_arr.length; i++) {
         temp_json[this.iex_data_arr[i]['ticker']] = this.iex_data_arr[i]
       }
+      console.log(temp_json)
 
       for (var i = 0; i < this.watchlist.length; i++) {
         var tick = this.watchlist[i]
+        console.log(tick)
         this.WLCardsData.push({ 'name': this.ticker_mapping[tick], 'tickername': tick, 'price': temp_json[tick]['last'], 'change': parseFloat((temp_json[tick]['last'] - temp_json[tick]['prevClose']).toFixed(2)), changepercent: parseFloat(((temp_json[tick]['last'] - temp_json[tick]['prevClose']) * 100 / temp_json[tick]['prevClose']).toFixed(2)) })
       }
       this.loaded = true;

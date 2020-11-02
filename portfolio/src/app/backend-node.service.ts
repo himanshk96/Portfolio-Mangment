@@ -9,7 +9,7 @@ import { supportsScrollBehavior } from '@angular/cdk/platform';
   providedIn: 'root'
 })
 export class BackendNodeService {
-  backend_url = "http://localhost:3000";
+  backend_url = "http://localhost:8081";
   iex_data;
   constructor(private http: HttpClient) { }
 
