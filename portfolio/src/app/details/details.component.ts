@@ -92,8 +92,11 @@ export class DetailsComponent implements OnInit {
 
   }
   marketDate() {
-    var dateM = this.iex_data["timestamp"].split("T") //market closed on
-    dateM = dateM[0] + " " + dateM[1].split(".")[0] + " UTC"
+    // var dateM = this.iex_data["timestamp"].split("T") //market closed on
+    // dateM = dateM[0] + " " + dateM[1].split(".")[0] + " UTC"
+    var tempInput = this.iex_data["timestamp"].substr(0, 10) + "T" + this.iex_data["timestamp"].substr(11, 8) + "Z";
+    var dateM = new Date(Date.parse(tempInput));
+
     let dateU = new Date(dateM)
     var time = dateU.toTimeString().slice(0, 8)
     this.formatDate = dateU.getFullYear() + "-" + (+dateU.getMonth() + 1) + "-" + dateU.getDate() + " " + time
@@ -281,6 +284,7 @@ export class DetailsComponent implements OnInit {
     }
     localStorage.setItem('portfolio_data', JSON.stringify(portfoloio_data));
     var alertva = { "type": "success", "msg": this.stock_symbol + " bought successfully!" }
+
     this.msgs.unshift(alertva);
     setTimeout(this.close.bind(this), 5000, alertva);
     this.saveToMapping(this.stock_symbol, this.daily_data["name"])
