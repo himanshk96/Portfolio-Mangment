@@ -45,6 +45,7 @@ export class DetailsComponent implements OnInit {
   Highcharts1: typeof Highcharts = Highcharts;
   chartOptions1: Highcharts.Options;
   currentDate;
+  formatDate;
 
   Highcharts2: typeof Highcharts = Highcharts;
   chartOptions2: Highcharts.Options;
@@ -63,8 +64,9 @@ export class DetailsComponent implements OnInit {
       this.iex_data = res;
       this.chart_chng = (this.iex_data["last"] - this.iex_data["prevClose"]) > 0 ? "green" : "red"
       this.load_chart1();
-      console.log(Date.now())
-
+      // console.log(Date.now())
+      this.marketDate()
+      this.FindcurrentDate()
 
     });
     this._http.getDailyData(this.stock_symbol).subscribe(res => {
@@ -83,13 +85,24 @@ export class DetailsComponent implements OnInit {
 
     }
     this.load_chart2()
+
+
+
+
+
+  }
+  marketDate() {
+    var dateM = this.iex_data["timestamp"].split("T") //market closed on
+    dateM = dateM[0] + " " + dateM[1].split(".")[0] + " UTC"
+    let dateU = new Date(dateM)
+    var time = dateU.toTimeString().slice(0, 8)
+    this.formatDate = dateU.getFullYear() + "-" + (+dateU.getMonth() + 1) + "-" + dateU.getDate() + " " + time
+  }
+  FindcurrentDate() {
     let date: Date = new Date();
     var month = ("0" + date.getMonth()).slice(-2)
     var dateNumber = ("0" + date.getDate().toString()).slice(-2)
-    this.currentDate = date.getFullYear() + "-" + month + "-" + dateNumber + " " + date.getHours() + ":" + ("0" + date.getMinutes()).slice(-2) + ":" + date.getSeconds();
-    // localStorage.setItem('watchlist', JSON.stringify(this.watchlist));
-    // console.log(this.iex_data);
-
+    this.currentDate = date.getFullYear() + "-" + month + "-" + dateNumber + " " + date.getHours() + ":" + ("0" + date.getMinutes()).slice(-2) + ":" + ("0" + date.getSeconds()).slice(-2);
 
   }
   load_chart2() {

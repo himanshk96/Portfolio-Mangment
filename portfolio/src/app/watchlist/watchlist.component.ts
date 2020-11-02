@@ -27,7 +27,14 @@ export class WatchlistComponent implements OnInit {
   }
 
   async loadWLData() {
+
+    this.watchlist = JSON.parse(localStorage.getItem("watchlist")) || [];
+    if (this.watchlist.length == 0) {
+      this.loaded = true
+      return
+    }
     this.watchlist.sort()
+
 
 
 
@@ -56,6 +63,11 @@ export class WatchlistComponent implements OnInit {
 
   }
   refreshData() {
+    this.watchlist = JSON.parse(localStorage.getItem("watchlist")) || [];
+    if (this.watchlist.length == 0) {
+      this.loaded = true
+      return
+    }
     var stocks = this.watchlist.join(",");
 
     this._http.getIexDataMulti(stocks).subscribe(res => {
@@ -72,6 +84,7 @@ export class WatchlistComponent implements OnInit {
         this.WLCardsData[i]['changepercent'] = parseFloat(((temp_json[tick]['last'] - temp_json[tick]['prevClose']) * 100 / temp_json[tick]['prevClose']).toFixed(2))
         // this.WLCardsData.push({ 'name': this.ticker_mapping[tick], 'tickername': tick, 'price': temp_json[tick]['last'], 'change': parseFloat((temp_json[tick]['last'] - temp_json[tick]['prevClose']).toFixed(2)), changepercent: parseFloat(((temp_json[tick]['last'] - temp_json[tick]['prevClose']) * 100 / temp_json[tick]['prevClose']).toFixed(2)) })
       }
+
 
     });
   }
