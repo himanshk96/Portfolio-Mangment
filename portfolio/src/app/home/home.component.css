@@ -6,3 +6,31 @@
     outline:none;
     
 }
+
+.container{
+    margin: auto;
+    text-align: center;
+    align-items: center;
+    margin-top: 160px;
+    height: 450px;
+}
+.heading{
+    font-size: 70px;
+    font-weight: bold;
+    line-height: 61px;
+}
+.inputField{
+    border: solid 2px #6d4dfb;
+    border-radius: 15px;
+    height: 30px;
+    width: 225px;
+    margin-top: 55px;
+    user-select: none;
+    outline: none;
+    padding: 15px;
+}
+.icon{
+    margin-top: -28px;
+    margin-left: 170px;
+    color : rgb(111,79,251);
+}

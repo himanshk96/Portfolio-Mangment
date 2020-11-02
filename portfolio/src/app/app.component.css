@@ -1,63 +1,63 @@
 a{
-    color:white;
+  color:white;
 }
 
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
-    position: relative;
-    min-height: 100%;
-  }
-  body {
-    /* Margin bottom by footer height */
-    margin-bottom: 60px;
-  }
-   
-  .footer {
-    background-color: #ccc;
-    text-align: center;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    z-index: 1;
-    margin-top: 10px;
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+  
+.footer {
+  background-color: #ccc;
+  text-align: center;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  z-index: 1;
+  margin-top: 10px;
     /* min-height: 50px; */
 }
   
-  
-  /* Custom page CSS
-  -------------------------------------------------- */
-  /* Not required for template or sticky footer method. */
-  
-  body > .container {
-    padding: 60px 15px 0;
-  }
-  
-  .footer > .container {
-    padding-right: 15px;
-    padding-left: 15px;
-  }
-  
-  code {
-    font-size: 80%;
-  }
-  .main_content{
-    
-    display: flex;  
-    justify-content: center;
-    
-    
-  }
-  
 
-  .center_content{
-    width: 70%;
-  }
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+body > .container {
+  padding: 60px 15px 0;
+}
+
+.footer > .container {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+  
+code {
+  font-size: 80%;
+}
+.main_content{
+  
+  display: flex;  
+  justify-content: center;
+  
+  
+}
 
 
+.center_content{
+  width: 70%;
+}
 
 
-  .active{
-    border:2px solid white;
-    border-radius: 15px;
-  }
+
+
+.active{
+  border:2px solid white;
+  border-radius: 15px;
+}

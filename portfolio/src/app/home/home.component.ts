@@ -15,14 +15,43 @@ export class HomeComponent implements OnInit {
   control = new FormControl();
   stk_symbol;
   Ready = true;
+  // constructor(private _http: BackendNodeService, private router: Router) { }
+
+  // ngOnInit(): void {
+
+  //   this.search_options = this._http.getSearch("apple");
+  // }
+  ticker: string = "";
+  options: Object;
+  myControl = new FormControl();
+  showSpinner = false;
+
   constructor(private _http: BackendNodeService, private router: Router) { }
 
   ngOnInit(): void {
-    // console.log('here I come');
-    // $('input').click(function () {
-    //   console.log("here");
-    // });
-    this.search_options = this._http.getSearch("apple");
+
+  }
+
+  onSubmit(ticker) {
+    if (ticker != '') {
+      this.router.navigate(['/details', ticker]);
+    }
+    return null;
+  }
+
+  goToHomePage() {
+    this.router.navigate(['/']);
+    return null;
+  }
+
+  autocomplete(ticker) {
+    this.options = this._http.getSearch(ticker);
+    clearTimeout();
+    this.showSpinner = true
+    setTimeout(() => {
+      this.showSpinner = false
+    }, 300);
+    return null;
   }
   // getOptions(symbol) {
   //   this.search_options = this._http.getSearch(symbol);

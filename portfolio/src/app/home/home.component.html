@@ -1,4 +1,4 @@
-<div class="text-center">
+<!-- <div class="text-center">
     <p class="h1">STOCK SEARCH</p>
 
     <div>
@@ -28,5 +28,31 @@
 
         </div>
 
+    </div>
+</div> -->
+
+
+<div class="container">
+    <div class="heading" style="font-size: 60px;">
+        <b>STOCK SEARCH</b>
+    </div>
+    <div>
+        <form>
+            <input type="text" #tickerValue class="inputField" [matAutocomplete]="auto" placeholder="Enter stock name"
+                (keyup)="autocomplete(tickerValue.value)" [formControl]="myControl">
+            <div class="icon">
+                <i class="fa fa-search" (click)="onSubmit(tickerValue.value)"></i>
+            </div>
+            <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let option of options | async" [value]="option.ticker">
+                    <b> {{option.ticker}} </b>| {{option.name}}
+                </mat-option>
+                <span *ngIf="showSpinner">
+                    <mat-option>
+                        <mat-spinner diameter="40" style="margin: 0 auto;"></mat-spinner>
+                    </mat-option>
+                </span>
+            </mat-autocomplete>
+        </form>
     </div>
 </div>

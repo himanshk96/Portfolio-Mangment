@@ -44,7 +44,7 @@ export class DetailsComponent implements OnInit {
   notFound = false;
   Highcharts1: typeof Highcharts = Highcharts;
   chartOptions1: Highcharts.Options;
-
+  currentDate;
 
   Highcharts2: typeof Highcharts = Highcharts;
   chartOptions2: Highcharts.Options;
@@ -83,7 +83,10 @@ export class DetailsComponent implements OnInit {
 
     }
     this.load_chart2()
-
+    let date: Date = new Date();
+    var month = ("0" + date.getMonth()).slice(-2)
+    var dateNumber = ("0" + date.getDate().toString()).slice(-2)
+    this.currentDate = date.getFullYear() + "-" + month + "-" + dateNumber + " " + date.getHours() + ":" + ("0" + date.getMinutes()).slice(-2) + ":" + date.getSeconds();
     // localStorage.setItem('watchlist', JSON.stringify(this.watchlist));
     // console.log(this.iex_data);
 
