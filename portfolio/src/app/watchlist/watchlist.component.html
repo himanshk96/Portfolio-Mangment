@@ -25,15 +25,15 @@
                         </div>
                         <div class="text-right">
                             <h1 [ngClass]="{
-                                
-                                'positive' : p.change > 0,
-                            'negative' : p.change < 0
+                                'blac_':p.change==0,
+                                'positive' : (p.change).toFixed(2) > 0,
+                            'negative' : (p.change).toFixed(2) < 0
                          }">{{p.price}}</h1>
 
                             <h3 [ngClass]="{
                             
-                            'positive' : p.change > 0,
-                            'negative' : p.change < 0
+                            'positive' : (p.change).toFixed(2) > 0,
+                            'negative' : (p.change).toFixed(2) < 0
                          }">
                                 <span *ngIf="p.change >= 0 else neg_img">
                                     <span *ngIf="p.change > 0"><svg width="1em" height="1em" viewBox="0 0 16 16"

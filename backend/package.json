@@ -4,19 +4,22 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm install && node app.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/himanshk96/backend_port.git"
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "aws-sdk": "^2.783.0",
-    "cors": "^2.8.5",
-    "ejs": "latest",
-    "express": "latest",
-    "request": "^2.88.2"
+  "bugs": {
+    "url": "https://github.com/himanshk96/backend_port/issues"
   },
-  "engines": {
-    "node": "12.16.1"
+  "homepage": "https://github.com/himanshk96/backend_port#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "request": "^2.88.2",
+    "requests": "^0.3.0"
   }
 }
