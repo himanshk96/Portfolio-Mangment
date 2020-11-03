@@ -3,7 +3,7 @@ var request = require('request');
 const server = express()
 var cors = require('cors')
 
-const port = 8081
+const port = process.env.port || 8080;
 server.use(cors())
 server.get('/', (req, res) => {
     res.send('CSCI 571 | HW8 | Himanshu Kriplani')
