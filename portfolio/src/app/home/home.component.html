@@ -40,7 +40,7 @@
         <form>
             <input type="text" #tickerValue class="inputField" [matAutocomplete]="auto" placeholder="Enter stock name"
                 (keyup)="autocomplete(tickerValue.value)" [formControl]="myControl">
-            <div class="icon">
+            <div class="icon" style="cursor: pointer;">
                 <i class="fa fa-search" (click)="onSubmit(tickerValue.value)"></i>
             </div>
             <mat-autocomplete #auto="matAutocomplete">

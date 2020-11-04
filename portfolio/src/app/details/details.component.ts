@@ -46,6 +46,7 @@ export class DetailsComponent implements OnInit {
   chartOptions1: Highcharts.Options;
   currentDate;
   formatDate;
+  t1; t2; market_open;
 
   Highcharts2: typeof Highcharts = Highcharts;
   chartOptions2: Highcharts.Options;
@@ -70,6 +71,7 @@ export class DetailsComponent implements OnInit {
       // console.log(Date.now())
       this.marketDate()
       this.FindcurrentDate()
+      this.market_open = (this.t2 - this.t1) > 60000 ? false : true
 
     });
     this._http.getDailyData(this.stock_symbol).subscribe(res => {
@@ -95,17 +97,30 @@ export class DetailsComponent implements OnInit {
 
   }
   marketDate() {
-    // var dateM = this.iex_data["timestamp"].split("T") //market closed on
-    // dateM = dateM[0] + " " + dateM[1].split(".")[0] + " UTC"
+
+    //Current date and time
+
+    // this.currentDate = date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2) + " " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + ":" + ("0" + date.getSeconds()).slice(-2);
+
+    //Date from API "timestamp"
     var tempInput = this.iex_data["timestamp"].substr(0, 10) + "T" + this.iex_data["timestamp"].substr(11, 8) + "Z";
     var dateM = new Date(Date.parse(tempInput));
+    let dateU = new Date(dateM);
+    var time = dateU.toTimeString().slice(0, 8);
+    this.t1 = dateU.getTime();
+    this.formatDate = dateU.getFullYear() + "-" + ("0" + (+dateU.getMonth() + 1)).slice(-2) + "-" + ("0" + dateU.getDate()).slice(-2) + " " + time
+    // var dateM = this.iex_data["timestamp"].split("T") //market closed on
+    // dateM = dateM[0] + " " + dateM[1].split(".")[0] + " UTC"
+    // var tempInput = this.iex_data["timestamp"].substr(0, 10) + "T" + this.iex_data["timestamp"].substr(11, 8) + "Z";
+    // var dateM = new Date(Date.parse(tempInput));
 
-    let dateU = new Date(dateM)
-    var time = dateU.toTimeString().slice(0, 8)
-    this.formatDate = dateU.getFullYear() + "-" + (+dateU.getMonth() + 1) + "-" + dateU.getDate() + " " + time
+    // let dateU = new Date(dateM)
+    // var time = dateU.toTimeString().slice(0, 8)
+    // this.formatDate = dateU.getFullYear() + "-" + (+dateU.getMonth() + 1) + "-" + dateU.getDate() + " " + time
   }
   FindcurrentDate() {
     let date: Date = new Date();
+    this.t2 = date.getTime();
     var month = ("0" + date.getMonth()).slice(-2)
     var dateNumber = ("0" + date.getDate().toString()).slice(-2)
     this.currentDate = date.getFullYear() + "-" + month + "-" + dateNumber + " " + date.getHours() + ":" + ("0" + date.getMinutes()).slice(-2) + ":" + ("0" + date.getSeconds()).slice(-2);
@@ -239,7 +254,7 @@ export class DetailsComponent implements OnInit {
       });
       this.chartOptions1 = {
         title: {
-          text: this.stock_symbol.toUpperCase() + ' Stock Price'
+          text: this.stock_symbol.toUpperCase()
         },
         rangeSelector: {
           enabled: false

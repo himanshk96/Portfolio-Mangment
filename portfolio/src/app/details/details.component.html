@@ -35,16 +35,17 @@
     <ng-template #newscontent let-modal>
         <div class="modal-header">
             <div>
-                <h3 class="modal-title" id="modal-basic-title">{{tempNews.source.name}}</h3>
-                <p style="color: grey;">{{tempNews.publishedAtModified}}</p>
+                <h1 class="modal-title" id="modal-basic-title" style="margin: 0px"><b>{{tempNews.source.name}}</b></h1>
+                <p style="color: grey;margin-top: 0px;">{{tempNews.publishedAtModified}}</p>
             </div>
-            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <button type="button" class="close" aria-label="Close" style="outline: 0px;"
+                (click)="modal.dismiss('Cross click')">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
         <div class="modal-body">
-            <h5>{{tempNews.title}}</h5>
-            <p>{{tempNews.description}}</p>
+            <h3 style="margin: 0px;"><b>{{tempNews.title}}</b></h3>
+            <p style="margin:0px">{{tempNews.description}}</p>
             <p style="color: grey;">For more details click <a href="{{tempNews.url}}" target="_blank">here</a></p>
         </div>
         <div class="card  mx-3 my-3">
@@ -87,9 +88,10 @@
             <div>
                 <h1>{{stock_symbol | uppercase}}
                     <span *ngIf="inWatchList">
-                        <i (click)="updateWatchlist();" style="color: gold" class="material-icons">star</i></span>
-                    <span *ngIf="!inWatchList"><i (click)="updateWatchlist(); "
-                            class="material-icons">star_outline</i></span>
+                        <i (click)="updateWatchlist();" style="color: gold;cursor: pointer;"
+                            class="material-icons">star</i></span>
+                    <span *ngIf="!inWatchList"><i (click)="updateWatchlist(); " class="material-icons"
+                            style="cursor: pointer;">star_outline</i></span>
                 </h1>
                 <h2 *ngIf="daily_data" class="caption_color_grey">{{daily_data.name}}</h2>
                 <h5 *ngIf="daily_data" class="caption_color_grey">{{daily_data.exchangeCode}}</h5>
@@ -124,8 +126,7 @@
             </div>
         </div>
         <div *ngIf="iex_data else market_close_temp" class="text-center ">
-            <div
-                *ngIf="(iex_data.askPrice!=null && iex_data.bidPrice!=null && iex_data.askSize!=null && iex_data.bidSize!=null) else market_close_temp">
+            <div *ngIf="market_open else market_close_temp">
                 <span style="background-color:rgb(220,240,220);">Market is open</span>
             </div>
         </div>
@@ -145,8 +146,69 @@
                         <div *ngIf="iex_data">
                             <div class="row" style="width: 100%;">
                                 <div class="col-sm">
-
-                                    <div class="row">
+                                    <div class="numbers">
+                                        <div class="num-left">
+                                            <div class="mr-auto p-2">
+                                                <div class="d-flex">
+                                                    <div style="width: 50%;">High Price:</div>
+                                                    <div style="width: 50%;;margin: auto;">{{ iex_data.high }}
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex">
+                                                    <div style="width: 50%;">Low Price:</div>
+                                                    <div style="width: 50%;;margin: auto;">{{ iex_data.low }}
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex">
+                                                    <div style="width: 50%;">Open Price:</div>
+                                                    <div style="width: 50%;;margin: auto;">{{ iex_data.open }}
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex">
+                                                    <div style="width: 50%;">Prev Close:</div>
+                                                    <div style="width: 50%;;margin: auto;">
+                                                        {{ iex_data.prevClose }}
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex">
+                                                    <div style="width: 50%;">Volume:</div>
+                                                    <div style="width: 50%;;margin: auto;">{{ iex_data.volume }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="num-right">
+                                            <div class="mr-auto p-2" *ngIf="isMarketClose==false">
+                                                <div class="d-flex">
+                                                    <div style="width: 50%;">Mid Price:</div>
+                                                    <div *ngIf="isMidNull==false" style="width: 50%; margin: auto;">
+                                                        {{iex_data.mid}}</div>
+                                                    <div *ngIf="isMidNull" style="width: 50%;margin: auto;"> - </div>
+                                                </div>
+                                                <div class="d-flex">
+                                                    <div style="width: 50%;">Ask Price:</div>
+                                                    <div style="width: 50%;margin: auto;">{{ iex_data.askPrice }}
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex">
+                                                    <div style="width: 50%;">Ask Size:</div>
+                                                    <div style="width: 50%;margin: auto;">{{ iex_data.askSize }}
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex">
+                                                    <div style="width: 50%;">Bid Price:</div>
+                                                    <div style="width: 50%;margin: auto;">{{ iex_data.bidPrice }}
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex">
+                                                    <div style="width: 50%;">Bid Size:</div>
+                                                    <div style="width: 50%;margin: auto;">{{ iex_data.bidSize }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="row">
                                         <div class="col-sm-6 d-flex justify-content-between">
 
                                             High Price: {{iex_data.high}}
@@ -169,9 +231,11 @@
                                                     *ngIf="iex_data.bidSize!=null else dashShow">{{iex_data.bidSize}}</span>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
+
                                     <div *ngIf="daily_data">
-                                        <h1>Company's Descriptions</h1>
+                                        <h1 style="text-align:center;margin-top: 20px;">Company's Description</h1>
+                                        <h3>Start Date: {{daily_data.startDate}}</h3>
                                         <p>{{daily_data.description}}</p>
                                     </div>
                                 </div>
@@ -195,7 +259,7 @@
                         <div *ngFor="let news of newsData" class="col-lg-6 col-md-12">
                             <div class="h-100 py-2">
                                 <div class="card bg-light h-100" (click)="openNewsModal(newscontent,news)"
-                                    style="margin-bottom: 9px; ">
+                                    style="margin-bottom: 9px;cursor: pointer; ">
                                     <div class="card-body row">
                                         <img class="card-img col-lg-3 col-md-12" src='{{news.urlToImage}}'
                                             alt="Card image" style="object-fit: cover;">

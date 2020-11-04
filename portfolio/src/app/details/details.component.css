@@ -61,3 +61,19 @@
     margin-left: 100px;
     margin-bottom: 100px;
 }
+.num-left {
+  flex: 50%;
+  flex-direction: row;
+  text-align: left;
+  margin: 0% 8% 8% 8%;
+}
+
+.num-right {
+  flex: 50%;
+  flex-direction: row;
+  text-align: left;
+  margin: 0% 8% 8% 8%;
+}
+.numbers{
+  display: flex;
+}
