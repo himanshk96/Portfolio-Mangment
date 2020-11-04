@@ -5,6 +5,16 @@
             </ngb-alert>
         </p>
     </div>
+    <!-- <div class="container text-center">
+        <ngb-alert *ngIf="successMessage" type="success" (close)="successMessage = ''" style="margin-top: 20px">
+            {{ successMessage }}</ngb-alert>
+        <ngb-alert *ngIf="successMessageAdd;" type="success" (close)="successMessageAdd = ''" style="margin-top: 20px">
+            {{ successMessageAdd }}</ngb-alert>
+        <ngb-alert *ngIf="successMessageRem" type="danger" (close)="successMessageRem = ''" style="margin-top: 20px">
+            {{ successMessageRem }}
+        </ngb-alert>
+    </div> -->
+
     <ng-template #content let-modal>
         <div class="modal-header">
             <h4 class="modal-title" id="modal-basic-title">{{this.stock_symbol}}</h4>
@@ -101,17 +111,17 @@
             <div class="text-right">
                 <h1 *ngIf="iex_data" [ngClass]="{
                     'blac_' :(iex_data.last-iex_data.prevClose) == 0, 
-            'positive' : (iex_data.last-iex_data.prevClose) > 0,
-            'negative' : (iex_data.last-iex_data.prevClose) < 0
+            'positive' : (iex_data.last-iex_data.prevClose).toFixed(2) > 0,
+            'negative' : (iex_data.last-iex_data.prevClose).toFixed(2) < 0
          }">{{iex_data.last}}</h1>
 
                 <h3 *ngIf="iex_data" [ngClass]="{
                     'blac_' :(iex_data.last-iex_data.prevClose) == 0,
-            'positive' : (iex_data.last-iex_data.prevClose) > 0,
-            'negative' : (iex_data.last-iex_data.prevClose) < 0
+            'positive' : (iex_data.last-iex_data.prevClose).toFixed(2) > 0,
+            'negative' : (iex_data.last-iex_data.prevClose).toFixed(2) < 0
          }">
-                    <span *ngIf="(iex_data.last-iex_data.prevClose)>=0 else neg_img"><span
-                            *ngIf="(iex_data.last-iex_data.prevClose)>0"> <svg width="1em" height="1em"
+                    <span *ngIf="(iex_data.last-iex_data.prevClose).toFixed(2)>=0 else neg_img"><span
+                            *ngIf="(iex_data.last-iex_data.prevClose).toFixed(2)>0"> <svg width="1em" height="1em"
                                 viewBox="0 0 16 16" class="bi bi-caret-up-fill" fill="green"
                                 xmlns="http://www.w3.org/2000/svg">
 
@@ -135,7 +145,7 @@
             <span style="background-color: rgb(240,216,217);">Market closed on {{formatDate}}</span>
         </ng-template>
         <ng-template #dashShow>
-            -
+            <div style="width: 50%;margin: auto;">-</div>
         </ng-template>
 
         <div>
@@ -145,7 +155,7 @@
                     <div class="container" class="tabs_below">
                         <div *ngIf="iex_data">
                             <div class="row" style="width: 100%;">
-                                <div class="col-sm">
+                                <div class="col-sm-12">
                                     <div class="numbers">
                                         <div class="num-left">
                                             <div class="mr-auto p-2">
@@ -172,37 +182,43 @@
                                                 </div>
                                                 <div class="d-flex">
                                                     <div style="width: 50%;">Volume:</div>
-                                                    <div style="width: 50%;;margin: auto;">{{ iex_data.volume }}
+                                                    <div style="width: 50%;;margin: auto;">
+                                                        {{ iex_data.volume | number : '.0-2'  }}
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="num-right">
-                                            <div class="mr-auto p-2" *ngIf="isMarketClose==false">
+                                            <div class="mr-auto p-2" *ngIf="market_open==true">
                                                 <div class="d-flex">
                                                     <div style="width: 50%;">Mid Price:</div>
-                                                    <div *ngIf="isMidNull==false" style="width: 50%; margin: auto;">
+                                                    <div *ngIf="iex_data.mid!=null" style="width: 50%; margin: auto;">
                                                         {{iex_data.mid}}</div>
-                                                    <div *ngIf="isMidNull" style="width: 50%;margin: auto;"> - </div>
+                                                    <div *ngIf="!iex_data.mid" style="width: 50%;margin: auto;"> -
+                                                    </div>
                                                 </div>
                                                 <div class="d-flex">
                                                     <div style="width: 50%;">Ask Price:</div>
-                                                    <div style="width: 50%;margin: auto;">{{ iex_data.askPrice }}
+                                                    <div *ngif="iex_data.askPrice else dashShow"
+                                                        style="width: 50%;margin: auto;">{{ iex_data.askPrice }}
                                                     </div>
                                                 </div>
                                                 <div class="d-flex">
                                                     <div style="width: 50%;">Ask Size:</div>
-                                                    <div style="width: 50%;margin: auto;">{{ iex_data.askSize }}
+                                                    <div *ngif="iex_data.askSize else dashShow"
+                                                        style="width: 50%;margin: auto;">{{ iex_data.askSize }}
                                                     </div>
                                                 </div>
                                                 <div class="d-flex">
                                                     <div style="width: 50%;">Bid Price:</div>
-                                                    <div style="width: 50%;margin: auto;">{{ iex_data.bidPrice }}
+                                                    <div *ngif="iex_data.bidPrice else dashShow"
+                                                        style="width: 50%;margin: auto;">{{ iex_data.bidPrice }}
                                                     </div>
                                                 </div>
                                                 <div class="d-flex">
                                                     <div style="width: 50%;">Bid Size:</div>
-                                                    <div style="width: 50%;margin: auto;">{{ iex_data.bidSize }}
+                                                    <div *ngif="iex_data.bidSize else dashShow"
+                                                        style="width: 50%;margin: auto;">{{ iex_data.bidSize }}
                                                     </div>
                                                 </div>
                                             </div>
@@ -239,7 +255,7 @@
                                         <p>{{daily_data.description}}</p>
                                     </div>
                                 </div>
-                                <div class="col-sm h-100 w-100">
+                                <div class="col-sm-12 h-100 w-100">
                                     <ng-container *ngIf="chartOptions1">
                                         <div class="Display">
                                             <highcharts-chart [Highcharts]="Highcharts1"
@@ -259,11 +275,11 @@
                         <div *ngFor="let news of newsData" class="col-lg-6 col-md-12">
                             <div class="h-100 py-2">
                                 <div class="card bg-light h-100" (click)="openNewsModal(newscontent,news)"
-                                    style="margin-bottom: 9px;cursor: pointer; ">
-                                    <div class="card-body row">
-                                        <img class="card-img col-lg-3 col-md-12" src='{{news.urlToImage}}'
+                                    style="margin-bottom: 9px; ">
+                                    <div class="card-body row" style="cursor: pointer;">
+                                        <img class="card-img col-md-3 col-sm-12" src='{{news.urlToImage}}'
                                             alt="Card image" style="object-fit: cover;">
-                                        <p style="width: 100%;" class="card-text col-lg-9 col-md-12">{{news.title}}</p>
+                                        <p style="width: 100%;" class="card-text col-md-9 col-sm-12">{{news.title}}</p>
                                     </div>
                                 </div>
                             </div>

@@ -7,7 +7,7 @@
     <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">{{this.cur_stock_symbol}}</h4>
         <button type="button" class="close" aria-label="Close" style="outline: none;"
-            (click)="modal.dismiss('Cross click')">
+            (click)="modal.dismiss('Cross click');">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
@@ -109,9 +109,9 @@
                                 
                              }">
                                     <span
-                                        *ngIf="(port_data[p.key]['last']-(getTotalPrice(p.key)/getQuantity(p.key)) ) >=0 else neg_img">
+                                        *ngIf="(port_data[p.key]['last']-(getTotalPrice(p.key)/getQuantity(p.key)) ).toFixed(2) >=0 else neg_img">
                                         <span
-                                            *ngIf="(port_data[p.key]['last']-(getTotalPrice(p.key)/getQuantity(p.key)) ) >0"><svg
+                                            *ngIf="(port_data[p.key]['last']-(getTotalPrice(p.key)/getQuantity(p.key)) ).toFixed(2) >0"><svg
                                                 width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-caret-up-fill"
                                                 fill="green" xmlns="http://www.w3.org/2000/svg">
                                                 <path

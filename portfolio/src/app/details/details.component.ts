@@ -73,6 +73,7 @@ export class DetailsComponent implements OnInit {
       this.FindcurrentDate()
       this.market_open = (this.t2 - this.t1) > 60000 ? false : true
 
+
     });
     this._http.getDailyData(this.stock_symbol).subscribe(res => {
       this.daily_data = res;
@@ -101,14 +102,17 @@ export class DetailsComponent implements OnInit {
     //Current date and time
 
     // this.currentDate = date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2) + " " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + ":" + ("0" + date.getSeconds()).slice(-2);
-
+    var date = this.iex_data["timestamp"]
+    date = new Date(date)
+    var t1 = date.getTime()
+    this.formatDate = date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2) + " " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + ":" + ("0" + date.getSeconds()).slice(-2);
     //Date from API "timestamp"
-    var tempInput = this.iex_data["timestamp"].substr(0, 10) + "T" + this.iex_data["timestamp"].substr(11, 8) + "Z";
-    var dateM = new Date(Date.parse(tempInput));
-    let dateU = new Date(dateM);
-    var time = dateU.toTimeString().slice(0, 8);
-    this.t1 = dateU.getTime();
-    this.formatDate = dateU.getFullYear() + "-" + ("0" + (+dateU.getMonth() + 1)).slice(-2) + "-" + ("0" + dateU.getDate()).slice(-2) + " " + time
+    // var tempInput = this.iex_data["timestamp"].substr(0, 10) + "T" + this.iex_data["timestamp"].substr(11, 8) + "Z";
+    // var dateM = new Date(Date.parse(tempInput));
+    // let dateU = new Date(dateM);
+    // var time = dateU.toTimeString().slice(0, 8);
+    // this.t1 = dateU.getTime();
+    // this.formatDate = dateU.getFullYear() + "-" + ("0" + (+dateU.getMonth() + 1)).slice(-2) + "-" + ("0" + dateU.getDate()).slice(-2) + " " + time
     // var dateM = this.iex_data["timestamp"].split("T") //market closed on
     // dateM = dateM[0] + " " + dateM[1].split(".")[0] + " UTC"
     // var tempInput = this.iex_data["timestamp"].substr(0, 10) + "T" + this.iex_data["timestamp"].substr(11, 8) + "Z";

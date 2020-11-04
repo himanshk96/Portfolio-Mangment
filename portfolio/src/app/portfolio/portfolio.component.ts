@@ -111,17 +111,22 @@ export class PortfolioComponent implements OnInit {
     this.marketDate()
     this.FindcurrentDate()
     this.market_open = (this.t2 - this.t1) > 60000 ? false : true
-
+    console.log(this.market_open)
     this.quantity = 0;
     this.total_price_buy = 0;
     this.cur_stock_symbol = stock_symbol;
     this.curr_quantity = this.portfolio_data[stock_symbol]["quantity"]
-    this._http.getIexData(stock_symbol).subscribe(res => {
-      this.iex_data = res;
-    });
-    this._http.getDailyData(stock_symbol).subscribe(res => {
-      this.daily_data = res;
-    });
+
+    // this._http.getIexData(stock_symbol).subscribe(res => {
+    //   this.iex_data = res;
+    // });
+    // this._http.getDailyData(stock_symbol).subscribe(res => {
+    //   this.daily_data = res;
+    // });
+    console.log(this.port_data)
+    // for (var i = 0; i < Object.keys(this.port_data).length; i++) {}
+
+    this.iex_data = this.port_data[this.cur_stock_symbol]
 
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
@@ -154,12 +159,15 @@ export class PortfolioComponent implements OnInit {
     else {
       portfoloio_data[this.cur_stock_symbol] = { "total": this.total_price_buy, "quantity": +this.quantity };
       // portfoloio_data[this.stock_symbol].push([this.total_price_buy, this.quantity])
+
     }
+    this.curr_quantity = this.quantity
     localStorage.setItem('portfolio_data', JSON.stringify(portfoloio_data));
     // var alertva = { "type": "success", "msg": this.cur_stock_symbol + " bought successfully!" }
     // this.msgs.unshift(alertva);
     // setTimeout(this.close.bind(this), 5000, alertva);
     this.refreshData()
+
   }
   removeFromPortfolio() {
     // var quant = parseInt(this.quantity)
@@ -199,14 +207,17 @@ export class PortfolioComponent implements OnInit {
     // this.currentDate = date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2) + " " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + ":" + ("0" + date.getSeconds()).slice(-2);
 
     //Date from API "timestamp"
-
-    console.log(this.iex_data_arr[0]["timestamp"])
-    var tempInput = this.iex_data_arr[0]["timestamp"].substr(0, 10) + "T" + this.iex_data_arr[0]["timestamp"].substr(11, 8) + "Z";
-    var dateM = new Date(Date.parse(tempInput));
-    let dateU = new Date(dateM);
-    var time = dateU.toTimeString().slice(0, 8);
-    this.t1 = dateU.getTime();
-    this.formatDate = dateU.getFullYear() + "-" + ("0" + (+dateU.getMonth() + 1)).slice(-2) + "-" + ("0" + dateU.getDate()).slice(-2) + " " + time
+    var date = this.iex_data_arr[0]["timestamp"]
+    date = new Date(date)
+    var t1 = date.getTime()
+    this.formatDate = date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2) + " " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + ":" + ("0" + date.getSeconds()).slice(-2);
+    // console.log(this.iex_data_arr[0]["timestamp"])
+    // var tempInput = this.iex_data_arr[0]["timestamp"].substr(0, 10) + "T" + this.iex_data_arr[0]["timestamp"].substr(11, 8) + "Z";
+    // var dateM = new Date(Date.parse(tempInput));
+    // let dateU = new Date(dateM);
+    // var time = dateU.toTimeString().slice(0, 8);
+    // this.t1 = dateU.getTime();
+    // this.formatDate = dateU.getFullYear() + "-" + ("0" + (+dateU.getMonth() + 1)).slice(-2) + "-" + ("0" + dateU.getDate()).slice(-2) + " " + time
     // var dateM = this.iex_data["timestamp"].split("T") //market closed on
     // dateM = dateM[0] + " " + dateM[1].split(".")[0] + " UTC"
     // var tempInput = this.iex_data["timestamp"].substr(0, 10) + "T" + this.iex_data["timestamp"].substr(11, 8) + "Z";
