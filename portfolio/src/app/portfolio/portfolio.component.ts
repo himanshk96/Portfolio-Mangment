@@ -20,6 +20,7 @@ export class PortfolioComponent implements OnInit {
   curr_quantity;
   ticker_mapping;
   iex_data_arr;
+  t1; t2; market_open; currentDate; formatDate;
   constructor(private _http: BackendNodeService, private modalService: NgbModal, private router: Router) {
 
   }
@@ -30,6 +31,7 @@ export class PortfolioComponent implements OnInit {
     // console.log("loading live data")
 
     this.loadIEXData()
+
     // console.log("loaded live data")
   }
   async loadIEXData() {
@@ -44,6 +46,7 @@ export class PortfolioComponent implements OnInit {
     }
     this._http.getIexDataMulti(stocks).subscribe(res => {
       this.iex_data_arr = res;
+      console.log("this is the things", this.iex_data_arr)
       var temp_json = {}
       for (var i = 0; i < this.iex_data_arr.length; i++) {
         temp_json[this.iex_data_arr[i]['ticker']] = this.iex_data_arr[i]
@@ -57,6 +60,7 @@ export class PortfolioComponent implements OnInit {
 
       };
       this.loaded = true;
+
     });
     // setInterval(() => {
     //   this.loaded = true
@@ -74,6 +78,7 @@ export class PortfolioComponent implements OnInit {
     this._http.getIexDataMulti(stocks).subscribe(res => {
       this.iex_data_arr = res;
       var temp_json = {}
+
       for (var i = 0; i < this.iex_data_arr.length; i++) {
         temp_json[this.iex_data_arr[i]['ticker']] = this.iex_data_arr[i]
       }
@@ -85,6 +90,7 @@ export class PortfolioComponent implements OnInit {
         // this.port_data.push({ 'name': ticker_data[2], 'tickername': sym, 'price': ticker_data[0], 'change': parseFloat((ticker_data[0] - ticker_data[1]).toFixed(2)), changepercent: parseFloat(((ticker_data[0] - ticker_data[1]) * 100 / ticker_data[1]).toFixed(2)) });
 
       };
+
     });
   }
   float2int(value) {
@@ -102,6 +108,10 @@ export class PortfolioComponent implements OnInit {
     return portfoloio_data[sym]["total"]
   }
   open(content, stock_symbol) {
+    this.marketDate()
+    this.FindcurrentDate()
+    this.market_open = (this.t2 - this.t1) > 60000 ? false : true
+
     this.quantity = 0;
     this.total_price_buy = 0;
     this.cur_stock_symbol = stock_symbol;
@@ -179,4 +189,40 @@ export class PortfolioComponent implements OnInit {
     this.router.navigate(['/details', ticker])
 
   }
+
+
+
+  marketDate() {
+
+    //Current date and time
+
+    // this.currentDate = date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2) + " " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + ":" + ("0" + date.getSeconds()).slice(-2);
+
+    //Date from API "timestamp"
+
+    console.log(this.iex_data_arr[0]["timestamp"])
+    var tempInput = this.iex_data_arr[0]["timestamp"].substr(0, 10) + "T" + this.iex_data_arr[0]["timestamp"].substr(11, 8) + "Z";
+    var dateM = new Date(Date.parse(tempInput));
+    let dateU = new Date(dateM);
+    var time = dateU.toTimeString().slice(0, 8);
+    this.t1 = dateU.getTime();
+    this.formatDate = dateU.getFullYear() + "-" + ("0" + (+dateU.getMonth() + 1)).slice(-2) + "-" + ("0" + dateU.getDate()).slice(-2) + " " + time
+    // var dateM = this.iex_data["timestamp"].split("T") //market closed on
+    // dateM = dateM[0] + " " + dateM[1].split(".")[0] + " UTC"
+    // var tempInput = this.iex_data["timestamp"].substr(0, 10) + "T" + this.iex_data["timestamp"].substr(11, 8) + "Z";
+    // var dateM = new Date(Date.parse(tempInput));
+
+    // let dateU = new Date(dateM)
+    // var time = dateU.toTimeString().slice(0, 8)
+    // this.formatDate = dateU.getFullYear() + "-" + (+dateU.getMonth() + 1) + "-" + dateU.getDate() + " " + time
+  }
+  FindcurrentDate() {
+    let date: Date = new Date();
+    this.t2 = date.getTime();
+    var month = ("0" + date.getMonth()).slice(-2)
+    var dateNumber = ("0" + date.getDate().toString()).slice(-2)
+    this.currentDate = date.getFullYear() + "-" + month + "-" + dateNumber + " " + date.getHours() + ":" + ("0" + date.getMinutes()).slice(-2) + ":" + ("0" + date.getSeconds()).slice(-2);
+
+  }
+
 }

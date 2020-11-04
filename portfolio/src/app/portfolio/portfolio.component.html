@@ -6,7 +6,8 @@
 <ng-template #content let-modal>
     <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">{{this.cur_stock_symbol}}</h4>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <button type="button" class="close" aria-label="Close" style="outline: none;"
+            (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
@@ -14,8 +15,8 @@
         <form>
             <div class="form-group">
                 <label for="Price">Current Price: {{iex_data.last}}</label><br>
-                <label for="Quantity">Quantity: </label>
-                <input type="number" [value]="quantity"
+                <label for="Quantity">Quantity: &nbsp;</label>
+                <input type="number" [value]="quantity" class="form-control" style="width:30%;display:inline"
                     (keyup)="quantity=$event.target.value; total_price_buy=iex_data.last*quantity;"
                     (change)="quantity=$event.target.value; total_price_buy=iex_data.last*quantity;" min="0">
 
@@ -34,7 +35,8 @@
 <ng-template #sellModal let-modal>
     <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">{{this.cur_stock_symbol}}</h4>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <button type="button" class="close" aria-label="Close" style="outline: none;"
+            (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
@@ -43,16 +45,16 @@
             <div class="form-group">
                 <label for="Price">Current Price: {{iex_data.last}}</label><br>
                 <label for="Quantity">Quantity: </label>
-                <input type="number" [value]="quantity"
-                    (keyup)="quantity=$event.target.value; total_price_buy=iex_data.last*quantity;" min="0">
+                <input type="number" [value]="quantity" class="form-control" style="width: 40%; display: inline;"
+                    autofocus (keyup)="quantity=$event.target.value; total_price_buy=iex_data.last*quantity;" min="0">
             </div>
 
         </form>
     </div>
     <div class="modal-footer">
         <span class="mr-auto">Total: {{(total_price_buy).toFixed(2) | number : '1.2-2' }}</span>
-        <div
-            *ngIf="(quantity<=curr_quantity && quantity>0) && (iex_data.askPrice!=null && iex_data.bidPrice!=null && iex_data.askSize!=null && iex_data.bidSize!=null) else disable_sell">
+        <!-- <div>{{curr_quantity}},{{quantity}},{{iex_data.askPrice}}</div> -->
+        <div *ngIf="(quantity<=curr_quantity && quantity>0) && market_open else disable_sell">
             <button type="button" class="btn btn-success"
                 (click)="modal.close('Save click');removeFromPortfolio(iex_data.name)">Sell</button></div>
 
@@ -71,7 +73,7 @@
         <div *ngFor="let p of portfolio_data | keyvalue" class="card_padding">
             <!-- {{i}} {{p.name}} -->
             <div class="card w-100 h-50">
-                <div class="card-header" (click)=callDetails(p.key)>
+                <div class="card-header" (click)=callDetails(p.key) style="cursor: pointer;">
                     <span class="h4">{{p.key}} <span
                             class="h5 caption_color_grey">{{port_data[p.key]["name"]}}</span></span>
                 </div>
