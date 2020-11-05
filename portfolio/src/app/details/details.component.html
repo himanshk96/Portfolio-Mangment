@@ -1,19 +1,21 @@
+<br>
 <div *ngIf="!notFound else extra_data">
-    <div class="mt-3">
+    <!-- <div class="mt-3">
         <p *ngFor="let m of msgs">
             <ngb-alert style="text-align: center;" [type]="m.type" (close)="close(m)">{{ m.msg }}
             </ngb-alert>
         </p>
-    </div>
-    <!-- <div class="container text-center">
-        <ngb-alert *ngIf="successMessage" type="success" (close)="successMessage = ''" style="margin-top: 20px">
-            {{ successMessage }}</ngb-alert>
+    </div> -->
+    <div class="container text-center">
+
         <ngb-alert *ngIf="successMessageAdd;" type="success" (close)="successMessageAdd = ''" style="margin-top: 20px">
             {{ successMessageAdd }}</ngb-alert>
         <ngb-alert *ngIf="successMessageRem" type="danger" (close)="successMessageRem = ''" style="margin-top: 20px">
             {{ successMessageRem }}
         </ngb-alert>
-    </div> -->
+        <ngb-alert *ngIf="successMessage" type="success" (close)="successMessage = ''" style="margin-top: 20px">
+            {{ successMessage }}</ngb-alert>
+    </div>
 
     <ng-template #content let-modal>
         <div class="modal-header">
@@ -27,18 +29,20 @@
                 <div class="form-group">
                     <label for="Price">Current Price: {{iex_data.last}}</label><br>
                     <label for="Quantity">Quantity: </label>
-                    <input type="number" [value]="quantity"
+                    <input #buy_input type="number" [value]="quantity"
                         (keyup)="quantity=$event.target.value; total_price_buy=iex_data.last*quantity;"
                         (change)="quantity=$event.target.value; total_price_buy=iex_data.last*quantity;" min="0">
+                    {{buy_input.focus()}}
                 </div>
 
             </form>
         </div>
         <div class="modal-footer">
-            <span class="mr-auto">Total: {{total_price_buy | number : '.2-2' }}</span>
+            <span class="mr-auto">Total: {{checkNeg(total_price_buy) | number : '1.2-2' }}</span>
             <div *ngIf="(total_price_buy)>0 else disable_buy">
                 <button type="button" class="btn btn-success"
-                    (click)="modal.close('Save click');addToPortfolioAndShowBuyMsg()">Buy</button></div>
+                    (click)="modal.close('Save click');addToPortfolioAndShowBuyMsg();changeSuccessMessage()">Buy</button>
+            </div>
 
         </div>
     </ng-template>
@@ -98,10 +102,10 @@
             <div>
                 <h1>{{stock_symbol | uppercase}}
                     <span *ngIf="inWatchList">
-                        <i (click)="updateWatchlist();" style="color: gold;cursor: pointer;"
+                        <i (click)="updateWatchlist();watchlistMessage();" style="color: gold;cursor: pointer;"
                             class="material-icons">star</i></span>
-                    <span *ngIf="!inWatchList"><i (click)="updateWatchlist(); " class="material-icons"
-                            style="cursor: pointer;">star_outline</i></span>
+                    <span *ngIf="!inWatchList"><i (click)="updateWatchlist();watchlistMessage(); "
+                            class="material-icons" style="cursor: pointer;">star_outline</i></span>
                 </h1>
                 <h2 *ngIf="daily_data" class="caption_color_grey">{{daily_data.name}}</h2>
                 <h5 *ngIf="daily_data" class="caption_color_grey">{{daily_data.exchangeCode}}</h5>
@@ -113,9 +117,9 @@
                     'blac_' :(iex_data.last-iex_data.prevClose) == 0, 
             'positive' : (iex_data.last-iex_data.prevClose).toFixed(2) > 0,
             'negative' : (iex_data.last-iex_data.prevClose).toFixed(2) < 0
-         }">{{iex_data.last}}</h1>
+         }"><b>{{iex_data.last | number : '1.2-2'}}</b></h1>
 
-                <h3 *ngIf="iex_data" [ngClass]="{
+                <h2 *ngIf="iex_data" [ngClass]="{
                     'blac_' :(iex_data.last-iex_data.prevClose) == 0,
             'positive' : (iex_data.last-iex_data.prevClose).toFixed(2) > 0,
             'negative' : (iex_data.last-iex_data.prevClose).toFixed(2) < 0
@@ -128,21 +132,21 @@
                                 <path
                                     d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z" />
                             </svg></span></span>
-                    {{(iex_data.last-iex_data.prevClose)  | number : '1.2-2'}}
+                    <b>{{(iex_data.last-iex_data.prevClose)  | number : '1.2-2'}}</b>
 
-                    ({{((iex_data.last-iex_data.prevClose)*100/iex_data.prevClose)  | number : '1.2-2'}}%)</h3>
+                    <b>({{((iex_data.last-iex_data.prevClose)*100/iex_data.prevClose)  | number : '1.2-2'}}%)</b></h2>
                 {{currentDate}}
 
             </div>
         </div>
         <div *ngIf="iex_data else market_close_temp" class="text-center ">
             <div *ngIf="market_open else market_close_temp">
-                <span style="background-color:rgb(220,240,220);">Market is open</span>
+                <span style="background-color:rgb(220,240,220);">Market is open</span><br>
             </div>
         </div>
         <ng-template #market_close_temp>
             <div>{{formateDate}}</div>
-            <span style="background-color: rgb(240,216,217);">Market closed on {{formatDate}}</span>
+            <span style="background-color: rgb(240,216,217);">Market closed on {{formatDate}}</span><br>
         </ng-template>
         <ng-template #dashShow>
             <div style="width: 50%;margin: auto;">-</div>
@@ -155,35 +159,38 @@
                     <div class="container" class="tabs_below">
                         <div *ngIf="iex_data">
                             <div class="row" style="width: 100%;">
-                                <div class="col-sm-12">
+                                <div class="col-sm-12 col-lg-6">
                                     <div class="numbers">
                                         <div class="num-left">
                                             <div class="mr-auto p-2">
                                                 <div class="d-flex">
                                                     <div style="width: 50%;">High Price:</div>
-                                                    <div style="width: 50%;;margin: auto;">{{ iex_data.high }}
+                                                    <div style="width: 50%;;margin: auto;">
+                                                        {{ iex_data.high | number : '1.2-2'}}
                                                     </div>
                                                 </div>
                                                 <div class="d-flex">
                                                     <div style="width: 50%;">Low Price:</div>
-                                                    <div style="width: 50%;;margin: auto;">{{ iex_data.low }}
+                                                    <div style="width: 50%;;margin: auto;">
+                                                        {{ iex_data.low | number : '1.2-2'}}
                                                     </div>
                                                 </div>
                                                 <div class="d-flex">
                                                     <div style="width: 50%;">Open Price:</div>
-                                                    <div style="width: 50%;;margin: auto;">{{ iex_data.open }}
+                                                    <div style="width: 50%;;margin: auto;">
+                                                        {{ iex_data.open | number : '1.2-2' }}
                                                     </div>
                                                 </div>
                                                 <div class="d-flex">
                                                     <div style="width: 50%;">Prev Close:</div>
                                                     <div style="width: 50%;;margin: auto;">
-                                                        {{ iex_data.prevClose }}
+                                                        {{ iex_data.prevClose | number : '1.2-2'}}
                                                     </div>
                                                 </div>
                                                 <div class="d-flex">
                                                     <div style="width: 50%;">Volume:</div>
                                                     <div style="width: 50%;;margin: auto;">
-                                                        {{ iex_data.volume | number : '.0-2'  }}
+                                                        {{ iex_data.volume | number : '1.0-2'  }}
                                                     </div>
                                                 </div>
                                             </div>
@@ -193,32 +200,37 @@
                                                 <div class="d-flex">
                                                     <div style="width: 50%;">Mid Price:</div>
                                                     <div *ngIf="iex_data.mid!=null" style="width: 50%; margin: auto;">
-                                                        {{iex_data.mid}}</div>
+                                                        {{iex_data.mid | number : '1.2-2'}}</div>
                                                     <div *ngIf="!iex_data.mid" style="width: 50%;margin: auto;"> -
                                                     </div>
                                                 </div>
                                                 <div class="d-flex">
                                                     <div style="width: 50%;">Ask Price:</div>
-                                                    <div *ngif="iex_data.askPrice else dashShow"
-                                                        style="width: 50%;margin: auto;">{{ iex_data.askPrice }}
+                                                    <!-- here {{iex_data.askPrice}} -->
+                                                    <div *ngIf="iex_data.askPrice!=0 else dashShow"
+                                                        style="width: 50%;margin: auto;">
+                                                        {{ iex_data.askPrice | number : '1.2-2'}}
                                                     </div>
                                                 </div>
                                                 <div class="d-flex">
                                                     <div style="width: 50%;">Ask Size:</div>
-                                                    <div *ngif="iex_data.askSize else dashShow"
-                                                        style="width: 50%;margin: auto;">{{ iex_data.askSize }}
+                                                    <div *ngIf="iex_data.askSize else dashShow"
+                                                        style="width: 50%;margin: auto;">
+                                                        {{ iex_data.askSize | number : '1.2-2'}}
                                                     </div>
                                                 </div>
                                                 <div class="d-flex">
                                                     <div style="width: 50%;">Bid Price:</div>
-                                                    <div *ngif="iex_data.bidPrice else dashShow"
-                                                        style="width: 50%;margin: auto;">{{ iex_data.bidPrice }}
+                                                    <div *ngIf="iex_data.bidPrice else dashShow"
+                                                        style="width: 50%;margin: auto;">
+                                                        {{ iex_data.bidPrice | number : '1.2-2'}}
                                                     </div>
                                                 </div>
                                                 <div class="d-flex">
                                                     <div style="width: 50%;">Bid Size:</div>
-                                                    <div *ngif="iex_data.bidSize else dashShow"
-                                                        style="width: 50%;margin: auto;">{{ iex_data.bidSize }}
+                                                    <div *ngIf="iex_data.bidSize else dashShow"
+                                                        style="width: 50%;margin: auto;">
+                                                        {{ iex_data.bidSize | number : '1.2-2'}}
                                                     </div>
                                                 </div>
                                             </div>
@@ -255,7 +267,7 @@
                                         <p>{{daily_data.description}}</p>
                                     </div>
                                 </div>
-                                <div class="col-sm-12 h-100 w-100">
+                                <div class="col-sm-12 col-lg-6 h-100 w-100">
                                     <ng-container *ngIf="chartOptions1">
                                         <div class="Display">
                                             <highcharts-chart [Highcharts]="Highcharts1"
@@ -290,7 +302,8 @@
                     <ng-template matTabContent>
                         <div *ngIf="chartOptions2">
                             <highcharts-chart [Highcharts]="Highcharts2" [constructorType]="'stockChart'"
-                                [options]="chartOptions2" style="display: block; width: 100%; height: 100%;">
+                                [options]="chartOptions2"
+                                style="display: block; width: 100%;max-width: 100%; height: 550px;">
                             </highcharts-chart>
                         </div>
                     </ng-template>
@@ -306,4 +319,7 @@
         No result found. Please enter valid Ticker
     </div>
 
+</ng-template>
+<ng-template #dashShow>
+    <div style="width: 50%;margin: auto;">-</div>
 </ng-template>

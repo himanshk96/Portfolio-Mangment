@@ -27,7 +27,7 @@
     </div>
   </nav> -->
     <nav class="navbar navbar-expand-lg py-2.5 navbar-dark" style="background-color: rgb(105,85,242);">
-      <a class="navbar-brand" routerLink="/">Stock Search</a>
+      <a data-toggle="collapse" data-target=".navbar-collapse.show" class="navbar-brand" routerLink="/">Stock Search</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -36,16 +36,18 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item pr-2">
-            <a class="nav-link px-2" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
-              routerLink="/" style="text-align: right;">Search</a>
+            <a data-toggle="collapse" data-target=".navbar-collapse.show" class="nav-link px-2"
+              routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" routerLink="/"
+              style="text-align: right;">Search</a>
           </li>
           <li class="nav-item pr-2">
-            <a class="nav-link px-2" routerLinkActive="active" routerLink="/watchlist"
-              style="text-align: right;">Watchlist</a>
+            <a data-toggle="collapse" data-target=".navbar-collapse.show" class="nav-link px-2"
+              routerLinkActive="active" routerLink="/watchlist" style="text-align: right;">Watchlist</a>
           </li>
           <li class="nav-item pr-2">
-            <a class="nav-link px-2" style='padding-left: 8px; padding-right: 8px;' routerLinkActive="active"
-              routerLink="/portfolio" style="text-align: right;">Portfolio</a>
+            <a data-toggle="collapse" data-target=".navbar-collapse.show" class="nav-link px-2"
+              style='padding-left: 8px; padding-right: 8px;' routerLinkActive="active" routerLink="/portfolio"
+              style="text-align: right;">Portfolio</a>
           </li>
         </ul>
       </div>

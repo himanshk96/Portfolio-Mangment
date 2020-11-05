@@ -25,6 +25,13 @@ export class PortfolioComponent implements OnInit {
 
   }
   port_data = {};
+  checkNeg(val) {
+    if (val <= 0) {
+      this.total_price_buy = 0.00
+
+    }
+    return this.total_price_buy
+  }
   ngOnInit(): void {
     this.portfolio_data = JSON.parse(localStorage.getItem("portfolio_data")) || {};
     this.ticker_mapping = JSON.parse(localStorage.getItem("ticker_mapping")) || {};
@@ -115,7 +122,7 @@ export class PortfolioComponent implements OnInit {
     this.quantity = 0;
     this.total_price_buy = 0;
     this.cur_stock_symbol = stock_symbol;
-    this.curr_quantity = this.portfolio_data[stock_symbol]["quantity"]
+    this.curr_quantity = this.portfolio_data[stock_symbol]["quantity"];
 
     // this._http.getIexData(stock_symbol).subscribe(res => {
     //   this.iex_data = res;
@@ -161,7 +168,8 @@ export class PortfolioComponent implements OnInit {
       // portfoloio_data[this.stock_symbol].push([this.total_price_buy, this.quantity])
 
     }
-    this.curr_quantity = this.quantity
+    // this.curr_quantity = portfoloio_data[this.cur_stock_symbol]["quantity"]
+    this.portfolio_data = portfoloio_data;
     localStorage.setItem('portfolio_data', JSON.stringify(portfoloio_data));
     // var alertva = { "type": "success", "msg": this.cur_stock_symbol + " bought successfully!" }
     // this.msgs.unshift(alertva);
