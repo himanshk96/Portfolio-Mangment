@@ -33,10 +33,11 @@ export class HomeComponent implements OnInit {
   }
 
   onSubmit(ticker) {
-    if (ticker != '') {
-      this.router.navigate(['/details', ticker]);
-    }
-    return null;
+    this.router.navigate(['/details', ticker]);
+    // if (ticker != '') {
+    //   this.router.navigate(['/details', ticker]);
+    // }
+    // return null;
   }
 
   goToHomePage() {

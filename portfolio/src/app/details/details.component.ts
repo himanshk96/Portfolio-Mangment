@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription, timer } from 'rxjs';
+import { Subscription, timer, Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 import { switchMap, timeout } from 'rxjs/operators';
 import { BackendNodeService } from '../backend-node.service';
 
@@ -47,7 +48,12 @@ export class DetailsComponent implements OnInit {
   currentDate;
   formatDate;
   t1; t2; market_open;
-
+  private _success = new Subject<string>();
+  private _successAdd = new Subject<string>();
+  private _successRem = new Subject<string>();
+  successMessage = '';
+  successMessageAdd = '';
+  successMessageRem = '';
   Highcharts2: typeof Highcharts = Highcharts;
   chartOptions2: Highcharts.Options;
   constructor(private route: ActivatedRoute, private _http: BackendNodeService, private modalService: NgbModal) { }
@@ -58,7 +64,9 @@ export class DetailsComponent implements OnInit {
 
     this.sub = this.route.params.subscribe(params => {
       this.stock_symbol = params['stocksymbol'].toUpperCase();;
+      if (this.stock_symbol == '') { this.notFound = true }
     });
+
     // this.stk_data = this._http.getDetail(this.stock_symbol);
     this.subscription = timer(0, 15000).pipe(switchMap(() => this._http.getIexData(this.stock_symbol))).subscribe(res => {
       // this._http.getIexData(this.stock_symbol).subscribe(res => {
@@ -71,13 +79,14 @@ export class DetailsComponent implements OnInit {
       // console.log(Date.now())
       this.marketDate()
       this.FindcurrentDate()
-      this.market_open = (this.t2 - this.t1) > 60000 ? false : true
+      console.log(this.t2, this.t1)
+      this.market_open = (this.t2 - this.t1) > 60000 ? false : true;
 
 
     });
     this._http.getDailyData(this.stock_symbol).subscribe(res => {
       this.daily_data = res;
-      if (this.daily_data["detail"] == "Not found.") {
+      if (this.daily_data["detail"] == "Not found." || this.stock_symbol == '') {
         this.notFound = true;
       }
     });
@@ -97,6 +106,15 @@ export class DetailsComponent implements OnInit {
 
 
   }
+  changeSuccessMessage() {
+    // setTimeout(() => this.staticAlertClosed = true, 20000);
+    var ticker = this.stock_symbol
+    this._success.subscribe(message => this.successMessage = message);
+    this._success.pipe(
+      debounceTime(5000)
+    ).subscribe(() => this.successMessage = '');
+    this._success.next(`${ticker} bought successfully.`);
+  }
   marketDate() {
 
     //Current date and time
@@ -104,7 +122,7 @@ export class DetailsComponent implements OnInit {
     // this.currentDate = date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2) + " " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + ":" + ("0" + date.getSeconds()).slice(-2);
     var date = this.iex_data["timestamp"]
     date = new Date(date)
-    var t1 = date.getTime()
+    this.t1 = date.getTime()
     this.formatDate = date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2) + " " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + ":" + ("0" + date.getSeconds()).slice(-2);
     //Date from API "timestamp"
     // var tempInput = this.iex_data["timestamp"].substr(0, 10) + "T" + this.iex_data["timestamp"].substr(11, 8) + "Z";
@@ -305,15 +323,14 @@ export class DetailsComponent implements OnInit {
       // portfoloio_data[this.stock_symbol].push([this.total_price_buy, this.quantity])
     }
     localStorage.setItem('portfolio_data', JSON.stringify(portfoloio_data));
-    var alertva = { "type": "success", "msg": this.stock_symbol + " bought successfully!" }
-    console.log(this.msgs)
-    if (this.msgs.includes({ "type": "success", "msg": this.stock_symbol + " bought successfully!" })) {
-      var himanshu = "kriplani"
-    }
-    else {
-      this.msgs.unshift(alertva);
-      setTimeout(this.close.bind(this), 5000, alertva);
-    }
+
+    // Show Buy msg
+
+    // var alertva = { "type": "success", "msg": this.stock_symbol + " bought successfully!" }
+    // console.log(this.msgs)
+    // this.msgs.unshift(alertva);
+    // setTimeout(this.close.bind(this), 5000, alertva);
+
     this.saveToMapping(this.stock_symbol, this.daily_data["name"])
     // this.ngOnInit()
   }
@@ -383,18 +400,51 @@ export class DetailsComponent implements OnInit {
   close(m) {
     this.msgs.splice(this.msgs.indexOf(m), 1)
   }
+  watchlistMessage() {
+    var ticker = this.stock_symbol;
+    if (this.inWatchList) {
+
+      this._successAdd.subscribe(message => this.successMessageAdd = message);
+      this._successAdd.pipe(
+        debounceTime(5000)
+      ).subscribe(() => this.successMessageAdd = '');
+      this._successAdd.next(`${ticker} added to Watchlist.`);
+      this.successMessageRem = ''
+    }
+    else {
+
+      this._successRem.subscribe(message => this.successMessageRem = message);
+      this._successRem.pipe(
+        debounceTime(5000)
+      ).subscribe(() => this.successMessageRem = '');
+      this._successRem.next(`${ticker} removed from Watchlist.`);
+      this.successMessageAdd = ''
+    }
+
+  }
+  checkNeg(val) {
+    if (val <= 0) {
+      this.total_price_buy = 0.00
+
+    }
+    return this.total_price_buy
+  }
   updateWatchlist() {
     this.inWatchList = !this.inWatchList;
-    var alertva;
-    if (this.inWatchList) {
-      // alertva = { "type": "success", "msg": "Added " + this.stock_symbol };
-      this.msgs.unshift({ "type": "success", "msg": this.stock_symbol + " added to watchlist." });
-    }
-    if (!this.inWatchList) {
-      // alertva = { "type": "success", "msg": "Added " + this.stock_symbol };
-      this.msgs.unshift({ "type": "danger", "msg": this.stock_symbol + " removed from watchlist." });
-    }
-    setTimeout(this.close.bind(this), 5000, alertva);
+    // Send notification
+    // var alertva;
+    // if (this.inWatchList) {
+    //   // alertva = { "type": "success", "msg": "Added " + this.stock_symbol };
+    //   this.msgs.unshift({ "type": "success", "msg": this.stock_symbol + " added to watchlist." });
+    // }
+    // if (!this.inWatchList) {
+    //   // alertva = { "type": "success", "msg": "Added " + this.stock_symbol };
+    //   this.msgs.unshift({ "type": "danger", "msg": this.stock_symbol + " removed from watchlist." });
+    // }
+    // setTimeout(this.close.bind(this), 5000, alertva);
+
+
+
     this.watchlist = JSON.parse(localStorage.getItem("watchlist")) || [];
     // this.watchlist.indexOf(this.stock_symbol)
     if (this.watchlist.indexOf(this.stock_symbol) > -1) {

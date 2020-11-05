@@ -8,7 +8,9 @@ const routes: Routes = [
   { path: 'watchlist', component: WatchlistComponent },
   { path: '', component: HomeComponent },
   { path: 'portfolio', component: PortfolioComponent },
-  { path: 'details/:stocksymbol', component: DetailsComponent }
+  { path: 'details/:stocksymbol', component: DetailsComponent },
+  { path: 'details', component: DetailsComponent }
+  // {{ path: 'details/:stocksymbol', component: DetailsComponent }}
 ];
 
 @NgModule({
