@@ -106,6 +106,10 @@ export class DetailsComponent implements OnInit {
 
 
   }
+  // xyz(val) {
+  //   return
+  //   // return encodeURIComponent(val)
+  // }
   changeSuccessMessage() {
     // setTimeout(() => this.staticAlertClosed = true, 20000);
     var ticker = this.stock_symbol
@@ -369,7 +373,7 @@ export class DetailsComponent implements OnInit {
     let dateStringArray = this.tempNews["publishedAt"].split('T')[0].split('-');
     // console.log(dateStringArray)
     this.tempNews["publishedAtModified"] = this.month[parseInt(dateStringArray[1])].toString() + " " + dateStringArray[2] + ", " + dateStringArray[0];
-    this.tempNews["twitterContent"] = this.tempNews["title"].replace(/ /g, "%20") + " " + this.tempNews["url"];
+    this.tempNews["twitterContent"] = this.tempNews["title"].replace(/\%/g, "%25").replace(/ /g, "%20") + " " + this.tempNews["url"];
 
     // this.quantity = 0;
 
