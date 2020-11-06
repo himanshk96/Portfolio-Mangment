@@ -16,10 +16,10 @@
             <div class="form-group">
                 <label for="Price">Current Price: {{iex_data.last}}</label><br>
                 <label for="Quantity">Quantity: &nbsp;</label>
-                <input #buy_input type="number" [value]="quantity" class="form-control" style="width:30%;display:inline"
+                <input type="number" [value]="quantity" class="form-control" style="width:30%;display:inline"
                     (keyup)="quantity=$event.target.value; total_price_buy=iex_data.last*quantity;"
                     (change)="quantity=$event.target.value; total_price_buy=iex_data.last*quantity;" min="0">
-                {{buy_input.focus()}}
+
             </div>
 
         </form>
@@ -47,10 +47,9 @@
 
                 <label for="Price">Current Price: {{iex_data.last}}</label><br>
                 <label for="Quantity">Quantity: </label>
-                <input #sell_input type="number" [value]="quantity" class="form-control"
-                    style="width: 40%; display: inline;" autofocus
-                    (keyup)="quantity=$event.target.value; total_price_buy=iex_data.last*quantity;" min="0">
-                {{sell_input.focus()}}
+                <input type="number" [value]="quantity" class="form-control" style="width: 40%; display: inline;"
+                    autofocus (keyup)="quantity=$event.target.value; total_price_buy=iex_data.last*quantity;" min="0">
+
             </div>
 
         </form>

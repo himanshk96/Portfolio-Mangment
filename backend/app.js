@@ -131,6 +131,7 @@ server.get('/api/news_data/:stock_symbol', (req, res) => {
             articles = JSON.parse(body).articles;
             // console.log(body)
             // console.log(typeof articles)
+            console.log(articles.length)
             for (var i = 0; i < articles.length; i++) {
 
                 if (articles[i].title != null && articles[i].urlToImage != null && articles[i].title != '' && articles[i].urlToImage != '') {
@@ -142,7 +143,8 @@ server.get('/api/news_data/:stock_symbol', (req, res) => {
                     break;
                 }
             }
-            res.send({ "articles": articles });
+            console.log(final.length)
+            res.send({ "articles": final });
         }
     );
 });
