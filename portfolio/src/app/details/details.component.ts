@@ -349,7 +349,7 @@ export class DetailsComponent implements OnInit {
 
   open(content) {
     this.quantity = 0;
-
+    this.total_price_buy = 0;
     this._http.getIexData(this.stock_symbol).subscribe(res => {
       this.iex_data = res;
     });
