@@ -43,4 +43,5 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

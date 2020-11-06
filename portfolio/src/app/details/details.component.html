@@ -143,12 +143,12 @@
         </div>
         <div *ngIf="iex_data else market_close_temp" class="text-center ">
             <div *ngIf="market_open else market_close_temp">
-                <span style="background-color:rgb(220,240,220);">Market is open</span><br>
+                <br><span style="background-color:rgb(220,240,220);">Market is open</span><br><br>
             </div>
         </div>
         <ng-template #market_close_temp>
             <div>{{formateDate}}</div>
-            <span style="background-color: rgb(240,216,217);">Market closed on {{formatDate}}</span><br>
+            <br> <span style="background-color: rgb(240,216,217);">Market closed on {{formatDate}}</span><br><br>
         </ng-template>
         <ng-template #dashShow>
             <div style="width: 50%;margin: auto;">-</div>

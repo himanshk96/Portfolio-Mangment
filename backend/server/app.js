@@ -5,9 +5,14 @@ var cors = require('cors')
 
 const port = process.env.port || 8080;
 server.use(cors())
-server.get('/', (req, res) => {
-    res.send('CSCI 571 | HW8 | Himanshu Kriplani')
-})
+// server.get('/', (req, res) => {
+//     res.send('CSCI 571 | HW8 | Himanshu Kriplani')
+// })
+
+
+var path = require('path');
+
+server.use(express.static(path.join(__dirname, 'dist/portfolio')));
 
 
 
@@ -134,4 +139,9 @@ server.get('/api/news_data/:stock_symbol', (req, res) => {
             res.send({ "articles": articles });
         }
     );
+});
+
+
+server.get('*', function (req, res) {
+    res.sendFile(path.join(__dirname, 'dist/stock/index.html'));
 });
