@@ -10,8 +10,8 @@ import { supportsScrollBehavior } from '@angular/cdk/platform';
 })
 export class BackendNodeService {
   // backend_url = "http://portfoliomanagement-env.eba-uajvu7af.us-east-1.elasticbeanstalk.com"
-  backend_url = "http://localhost:8080";
-  // backend_url = "http://hw8portfolio-env.eba-xf5362dh.us-east-1.elasticbeanstalk.com"// "http://localhost:8081";
+  // backend_url = "http://localhost:8080";
+  backend_url = "http://hw8portfolio-env.eba-xf5362dh.us-east-1.elasticbeanstalk.com"// "http://localhost:8081";
   iex_data;
   constructor(private http: HttpClient) { }
 
